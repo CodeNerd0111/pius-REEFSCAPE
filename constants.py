@@ -18,4 +18,6 @@ class DriveConstants:
 
 
 class OIConstants:
-    kDriverControllerPort = 0
+    kXBoxControllerPort = 2
+    kLeftJoystickPort = 0
+    kRightJoystickPort = 1

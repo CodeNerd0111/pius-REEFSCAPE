@@ -30,9 +30,15 @@ class RobotContainer:
             lambda: self.robotDrive.setMaxOutput(0.5), self.robotDrive
         )
 
-        # The driver's controller
-        self.driverController = commands2.button.CommandXboxController(
-            constants.OIConstants.kDriverControllerPort
+        # The driver's controllers
+        self.XBoxController = commands2.button.CommandXboxController(
+            constants.OIConstants.kXBoxControllerPort
+        )
+        self.leftJoystick = commands2.button.CommandJoystick(
+            constants.OIConstants.kLeftJoystickPort
+        )
+        self.rightJoystick = commands2.button.CommandJoystick(
+            constants.OIConstants.kRightJoystickPort
         )
 
         # Configure the button bindings
@@ -45,8 +51,8 @@ class RobotContainer:
             # hand, and turning controlled by the right.
             commands2.cmd.run(
                 lambda: self.robotDrive.arcadeDrive(
-                    -self.driverController.getLeftY(),
-                    -self.driverController.getRightX(),
+                    -self.leftJoystick.getY(),
+                    -self.leftJoystick.getX(),
                 ),
                 self.robotDrive,
             )
@@ -64,19 +70,19 @@ class RobotContainer:
         # We can bind commands while retaining references to them in RobotContainer
 
         # Drive at half speed when the bumper is held
-        self.driverController.rightBumper().onTrue(self.driveHalfSpeed).onFalse(
+        self.XBoxController.rightBumper().onTrue(self.driveHalfSpeed).onFalse(
             self.driveFullSpeed
         )
 
         # Drive forward by 3 meters when the 'A' button is pressed, with a timeout of 10 seconds
-        self.driverController.a().onTrue(
+        self.XBoxController.a().onTrue(
             commands.drivedistanceprofiled.DriveDistanceProfiled(
                 3, self.robotDrive
             ).withTimeout(10)
         )
 
         # Do the same thing as above when the 'B' button is pressed, but defined inline
-        self.driverController.b().onTrue(
+        self.XBoxController.b().onTrue(
             commands2.TrapezoidProfileCommand(
                 wpimath.trajectory.TrapezoidProfile(
                     # Limit the max acceleration and velocity
@@ -97,6 +103,12 @@ class RobotContainer:
             .beforeStarting(self.robotDrive.resetEncoders)
             .withTimeout(10)
         )
+        
+
+
+
+
+
 
     def getAutonomousCommand(self) -> commands2.Command:
         """
