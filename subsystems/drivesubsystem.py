@@ -29,7 +29,7 @@ class DriveSubsystem(commands2.Subsystem):
         )
         # Follows the main right motor so both can be passed into the Differential Drive
         self.rightFollower = smartmotorcontroller.SmartMotorController(
-            constants.DriveConstants.kRightMotor1Port
+            constants.DriveConstants.kRightMotor2Port
         )
 
         # We need to invert one side of the drivetrain so that positive voltages
