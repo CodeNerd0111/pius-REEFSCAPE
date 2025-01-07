@@ -7,18 +7,11 @@ class DriveConstants:
     kRightMotor1Port = 2
     kRightMotor2Port = 3
 
-    # Encoders and their respective motor controllers.
-    kLeftEncoderPorts = (0, 1)
-    kRightEncoderPorts = (2, 3)
-    kLeftEncoderReversed = False
-    kRightEncoderReversed = True
+    ksVolts = 1
+    kvVoltSecondsPerMeter = 0.8
+    kaVoltSecondsSquaredPerMeter = 0.15
 
-    # Encoder counts per revolution/rotation.
-    kEncoderCPR = 1024
-    kWheelDiameterInches = 6
-
-    # Assumes the encoders are directly mounted on the wheel shafts
-    kEncoderDistancePerPulse = (kWheelDiameterInches * math.pi) / kEncoderCPR
+    kp = 1
 
     kMaxSpeedMetersPerSecond = 3
     kMaxAccelerationMetersPerSecondSquared = 3

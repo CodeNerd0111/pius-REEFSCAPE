@@ -1,96 +1,113 @@
 import wpilib
 import wpilib.drive
 import commands2
+import wpimath.controller
+import wpimath.trajectory
 
 import constants
+import smartmotorcontroller
 
+# NOTE: We will initialize all of our motors in this subsystem file
+# Currently, a quad-motor example is being used
 
 class DriveSubsystem(commands2.Subsystem):
-    # Creates a new DriveSubsystem
     def __init__(self) -> None:
+        """Creates a new DriveSubsystem"""
         super().__init__()
-
-        # The motors on the left side of the drive
-        self.left_motors = wpilib.MotorControllerGroup(
-            wpilib.PWMSparkMax(constants.DriveConstants.kLeftMotor1Port),
-            wpilib.PWMSparkMax(constants.DriveConstants.kLeftMotor2Port),
+        # The motors on the left side of the drive. - Main
+        self.leftLeader = smartmotorcontroller.SmartMotorController(
+            constants.DriveConstants.kLeftMotor1Port
+        )
+        # Follows the main left motor so both can be passed into the Differential Drive
+        self.leftFollower = smartmotorcontroller.SmartMotorController(
+            constants.DriveConstants.kLeftMotor2Port
         )
 
-        # The motors on the right side of the drive
-        self.right_motors = wpilib.MotorControllerGroup(
-            wpilib.PWMSparkMax(constants.DriveConstants.kRightMotor1Port),
-            wpilib.PWMSparkMax(constants.DriveConstants.kRightMotor2Port),
+        # The motors on the right side of the drive. - Main
+        self.rightLeader = smartmotorcontroller.SmartMotorController(
+            constants.DriveConstants.kRightMotor1Port
         )
-
-        # The robot's drive
-        self.drive = wpilib.drive.DifferentialDrive(self.left_motors, self.right_motors)
-
-        # The left-side drive encoder
-        self.left_encoder = wpilib.Encoder(
-            constants.DriveConstants.kLeftEncoderPorts[0],
-            constants.DriveConstants.kLeftEncoderPorts[1],
-            constants.DriveConstants.kLeftEncoderReversed,
-        )
-
-        # The right-side drive encoder
-        self.right_encoder = wpilib.Encoder(
-            constants.DriveConstants.kRightEncoderPorts[0],
-            constants.DriveConstants.kRightEncoderPorts[1],
-            constants.DriveConstants.kRightEncoderReversed,
-        )
-
-        # Sets the distance per pulse for the encoders
-        self.left_encoder.setDistancePerPulse(
-            constants.DriveConstants.kEncoderDistancePerPulse
-        )
-        self.right_encoder.setDistancePerPulse(
-            constants.DriveConstants.kEncoderDistancePerPulse
+        # Follows the main right motor so both can be passed into the Differential Drive
+        self.rightFollower = smartmotorcontroller.SmartMotorController(
+            constants.DriveConstants.kRightMotor1Port
         )
 
         # We need to invert one side of the drivetrain so that positive voltages
         # result in both sides moving forward. Depending on how your robot's
         # gearbox is constructed, you might have to invert the left side instead.
-        self.right_motors.setInverted(True)
+        # self.rightLeader.setInverted(True)
 
-    def arcadeDrive(self, fwd: float, rot: float) -> None:
-        """Drives the robot using arcade controls.
+        # You might need to not do this depending on the specific motor controller
+        # that you are using -- contact the respective vendor's documentation for
+        # more details.
+        # self.rightFollower.setInverted(True)
+
+        self.leftFollower.follow(self.leftLeader)
+        self.rightFollower.follow(self.rightLeader)
+
+        self.leftLeader.setPID(constants.DriveConstants.kp, 0, 0)
+        self.rightLeader.setPID(constants.DriveConstants.kp, 0, 0)
+
+        # The feedforward controller (note that these are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!)
+        # check DriveConstants for more information.
+        self.feedforward = wpimath.controller.SimpleMotorFeedforwardMeters(
+            constants.DriveConstants.ksVolts,
+            constants.DriveConstants.kvVoltSecondsPerMeter,
+            constants.DriveConstants.kMaxAccelerationMetersPerSecondSquared,
+        )
+
+        # The robot's drive
+        self.drive = wpilib.drive.DifferentialDrive(self.leftLeader, self.rightLeader)
+
+    def arcadeDrive(self, fwd: float, rot: float):
+        """
+        Drives the robot using arcade controls.
 
         :param fwd: the commanded forward movement
         :param rot: the commanded rotation
         """
         self.drive.arcadeDrive(fwd, rot)
 
-    def resetEncoders(self) -> None:
-        """Resets the drive encoders to currently read a position of 0."""
-        self.left_encoder.reset()
-        self.right_encoder.reset()
-
-    def getAverageEncoderDistance(self) -> float:
-        """Gets the average distance of the two encoders.
-
-        :returns: the average of the two encoder readings
+    def setDriveStates(
+        self,
+        left: wpimath.trajectory.TrapezoidProfile.State,
+        right: wpimath.trajectory.TrapezoidProfile.State,
+    ):
         """
-        return (
-            self.left_encoder.getDistance() + self.right_encoder.getDistance()
-        ) / 2.0
+        Attempts to follow the given drive states using offboard PID.
 
-    def getLeftEncoder(self) -> wpilib.Encoder:
-        """Gets the left drive encoder.
-
-        :returns: the left drive encoder
+        :param left:  The left wheel state.
+        :param right: The right wheel state.
         """
-        return self.left_encoder
+        self.leftLeader.setSetPoint(
+            smartmotorcontroller.SmartMotorController.PIDMode.kPosition,
+            left.position,
+            self.feedforward.calculate(left.velocity),
+        )
 
-    def getRightEncoder(self) -> wpilib.Encoder:
-        """Gets the right drive encoder.
+        self.rightLeader.setSetPoint(
+            smartmotorcontroller.SmartMotorController.PIDMode.kPosition,
+            right.position,
+            self.feedforward.calculate(right.velocity),
+        )
 
-        :returns: the right drive encoder
+    def getLeftEncoderDistance(self) -> float:
+        """Returns the left drive encoder distance."""
+        return self.leftLeader.getEncoderDistance()
+
+    def getRightEncoderDistance(self) -> float:
+        """Returns the right drive encoder distance."""
+        return self.rightLeader.getEncoderDistance()
+
+    def resetEncoders(self):
+        """Resets the drive encoders"""
+        self.leftLeader.resetEncoder()
+        self.rightLeader.resetEncoder()
+
+    def setMaxOutput(self, maxOutput: float):
         """
-        return self.right_encoder
-
-    def setMaxOutput(self, max_output: float) -> None:
-        """Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
+        Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
 
         :param maxOutput: the maximum output to which the drive will be constrained
         """
-        self.drive.setMaxOutput(max_output) # maxOutput is multiplied to the motor power value, so a value of 1 is normal.
+        self.drive.setMaxOutput(maxOutput) # maxOutput is multiplied to the motor power value, so a value of 1 is normal.
