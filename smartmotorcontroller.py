@@ -1,7 +1,6 @@
 import wpilib.interfaces
 import enum
 
-
 class SmartMotorController(wpilib.interfaces.MotorController):
     """A simplified stub class that simulates the API of a common "smart" motor controller.
     Has no actual functionality.
@@ -19,6 +18,7 @@ class SmartMotorController(wpilib.interfaces.MotorController):
             port: The port for the controller.
         """
         super().__init__()
+        self.motor = wpilib.Spark(port)
 
     def setPID(self, kp: float, ki: float, kd: float) -> None:
         """Example method for setting the PID gains of the smart controller.
@@ -48,7 +48,7 @@ class SmartMotorController(wpilib.interfaces.MotorController):
         Args:
             leader: The leader to follow.
         """
-        pass
+        self.motor.addFollower(leader.motor)
 
     def getEncoderDistance(self) -> float:
         """Returns the encoder distance.
@@ -71,7 +71,7 @@ class SmartMotorController(wpilib.interfaces.MotorController):
         pass
 
     def set(self, speed: float) -> None:
-        pass
+        self.motor.set(speed)
 
     def get(self) -> float:
         pass
