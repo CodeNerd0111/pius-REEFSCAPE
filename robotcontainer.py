@@ -5,9 +5,11 @@ import commands2.button
 import constants
 
 import subsystems.drivesubsystem
+import subsystems.camerasubsystem
 import commands.drivedistanceprofiled
 
 import wpimath.trajectory
+
 
 class RobotContainer:
     """
@@ -21,6 +23,7 @@ class RobotContainer:
     def __init__(self):
         # The robot's subsystems need to be declared here:
         self.robotDrive = subsystems.drivesubsystem.DriveSubsystem()
+        self.cameraInfo = subsystems.camerasubsystem.CameraInterface()
 
         # Retained command references
         self.driveFullSpeed = commands2.cmd.runOnce(
@@ -54,9 +57,10 @@ class RobotContainer:
                     -self.leftJoystick.getY(),
                     -self.leftJoystick.getX(),
                 ),
-                self.robotDrive,
+                self.robotDrive
             )
         )
+        
 
     def configureButtonBindings(self):
         """

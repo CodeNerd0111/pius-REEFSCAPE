@@ -21,3 +21,8 @@ class OIConstants:
     kXBoxControllerPort = 2
     kLeftJoystickPort = 0
     kRightJoystickPort = 1
+
+class CameraConstants:
+    kImageWidth = 640
+    kImageHeight = 480
+    kAprTagBitCorrectionMax = 2

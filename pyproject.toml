@@ -28,4 +28,4 @@ robotpy_extras = [
 ]
 
 # Other pip packages to install
-requires = ["robotpy[commands2]", "robotpy-rev"]
+requires = ["robotpy[commands2]", "robotpy-rev", "robotpy_apriltag", "robotpy-cscore", "robotpy[opencv]"]
