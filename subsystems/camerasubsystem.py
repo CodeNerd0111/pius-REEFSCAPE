@@ -23,8 +23,10 @@ class CameraInterface(commands2.Subsystem):
         self.detector.addFamily("tag36h11", CamVals.kAprTagBitCorrectionMax)
         # Allocating new images is very expensive, always try to preallocate
         self.mat = np.zeros(shape=(CamVals.kImageHeight, CamVals.kImageWidth, 3), dtype=np.uint8)
+
+        self.tagDetected = commands2.button.Trigger(lambda: len(self.getTagIDs) > 0)
         
-    def getTagIDs(self):
+    def getTagIDs(self) -> list[int]: # This is very slow. I think it technically works, but it takes WAY too long.
         """Detects April Tags and returns a list of ID's"""
         
         image = self.cvSink.grabFrame(self.mat)[1]

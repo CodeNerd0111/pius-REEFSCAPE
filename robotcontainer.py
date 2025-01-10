@@ -3,6 +3,7 @@ import commands2.cmd
 import commands2.button
 
 import constants
+import networktableinterface as NTI
 
 import subsystems.drivesubsystem
 import subsystems.camerasubsystem
@@ -24,6 +25,9 @@ class RobotContainer:
         # The robot's subsystems need to be declared here:
         self.robotDrive = subsystems.drivesubsystem.DriveSubsystem()
         self.cameraInfo = subsystems.camerasubsystem.CameraInterface()
+        self.publisher = NTI.NetworkTablePublisher()
+
+
 
         # Retained command references
         self.driveFullSpeed = commands2.cmd.runOnce(
@@ -108,10 +112,18 @@ class RobotContainer:
             .withTimeout(10)
         )
         
+        self.cameraInfo.tagDetected.onTrue(
+            commands2.cmd.runOnce(
+                lambda: self.publisher.publishToTopic("AprilTags", "ID List", self.cameraInfo.getTagIDs()),
+                self.cameraInfo
+            )
+        )
 
 
-
-
+    def SetUpNetworkTables(self) -> None:
+        self.publisher.addNewTable("AprilTags")
+        self.publisher.addNewTopic("AprilTags", "ID List")
+        self.publisher.publishToTopic("AprilTag", "ID List", [])
 
 
     def getAutonomousCommand(self) -> commands2.Command:
