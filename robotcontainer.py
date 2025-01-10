@@ -3,7 +3,7 @@ import commands2.cmd
 import commands2.button
 
 import constants
-import networktableinterface as NTI
+import ntcore
 
 import subsystems.drivesubsystem
 import subsystems.camerasubsystem
@@ -25,9 +25,9 @@ class RobotContainer:
         # The robot's subsystems need to be declared here:
         self.robotDrive = subsystems.drivesubsystem.DriveSubsystem()
         self.cameraInfo = subsystems.camerasubsystem.CameraInterface()
-        self.publisher = NTI.NetworkTablePublisher()
+        self.publisher = ntcore.NetworkTableInstance.getDefault()
 
-
+        self.SetUpNetworkTables()
 
         # Retained command references
         self.driveFullSpeed = commands2.cmd.runOnce(
@@ -58,8 +58,8 @@ class RobotContainer:
             # hand, and turning controlled by the right.
             commands2.cmd.run(
                 lambda: self.robotDrive.arcadeDrive(
-                    -self.leftJoystick.getY(),
-                    -self.leftJoystick.getX(),
+                    self.leftJoystick.getX(),
+                    self.leftJoystick.getY(),
                 ),
                 self.robotDrive
             )
@@ -112,19 +112,16 @@ class RobotContainer:
             .withTimeout(10)
         )
         
-        self.cameraInfo.tagDetected.onTrue(
+        self.XBoxController.x().onTrue(
             commands2.cmd.runOnce(
-                lambda: self.publisher.publishToTopic("AprilTags", "ID List", self.cameraInfo.getTagIDs()),
+                lambda: self.pub_tagIDs.set(self.cameraInfo.getTagIDs()),
                 self.cameraInfo
             )
         )
 
 
     def SetUpNetworkTables(self) -> None:
-        self.publisher.addNewTable("AprilTags")
-        self.publisher.addNewTopic("AprilTags", "ID List")
-        self.publisher.publishToTopic("AprilTag", "ID List", [])
-
+        self.pub_tagIDs = self.publisher.getTable("AprilTag").getIntegerArrayTopic("IDs").publish()
 
     def getAutonomousCommand(self) -> commands2.Command:
         """
