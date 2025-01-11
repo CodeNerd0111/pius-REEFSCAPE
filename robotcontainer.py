@@ -6,10 +6,10 @@ import constants
 import ntcore
 
 import subsystems.drivesubsystem
-import subsystems.camerasubsystem
 import commands.drivedistanceprofiled
 
 import wpimath.trajectory
+import wpilib
 
 
 class RobotContainer:
@@ -24,9 +24,11 @@ class RobotContainer:
     def __init__(self):
         # The robot's subsystems need to be declared here:
         self.robotDrive = subsystems.drivesubsystem.DriveSubsystem()
-        self.cameraInfo = subsystems.camerasubsystem.CameraInterface()
-        self.publisher = ntcore.NetworkTableInstance.getDefault()
+        wpilib.CameraServer.launch("vision.py:main")
 
+
+        # Set up NetworkTables
+        self.publisher = ntcore.NetworkTableInstance.getDefault()
         self.SetUpNetworkTables()
 
         # Retained command references
@@ -111,17 +113,23 @@ class RobotContainer:
             .beforeStarting(self.robotDrive.resetEncoders)
             .withTimeout(10)
         )
-        
-        self.XBoxController.x().onTrue(
-            commands2.cmd.runOnce(
-                lambda: self.pub_tagIDs.set(self.cameraInfo.getTagIDs()),
-                self.cameraInfo
-            )
+
+    
+    def ConfigureTriggerCommands(self) -> None:
+        """
+        Use this method to define your Trigger->command mappings. 
+        """
+
+        # If a tag is detected, print the list of tag IDs to the console.
+        tagIDs = self.publisher.getIntegerArrayTopic("IDs").getEntry([]).get()
+        commands2.button.Trigger(lambda: len(tagIDs) > 0).onTrue(
+            commands2.cmd.runOnce(lambda: print(tagIDs))
         )
 
 
+
     def SetUpNetworkTables(self) -> None:
-        self.pub_tagIDs = self.publisher.getTable("AprilTag").getIntegerArrayTopic("IDs").publish()
+        pass
 
     def getAutonomousCommand(self) -> commands2.Command:
         """
