@@ -6,20 +6,23 @@ import cv2
 import ntcore
 
 
-def main(self):
+def main():
     CS.enableLogging()
+    
 
     publisher = ntcore.NetworkTableInstance.getDefault()
     pub_tagIDs = publisher.getTable("AprilTag").getIntegerArrayTopic("IDs").publish()
-
     # Get the UsbCamera from CameraServer
     camera = CS.startAutomaticCapture()
     # Set the resolution
     camera.setResolution(CamVals.kImageWidth, CamVals.kImageHeight)
+    camera.setBrightness(50)
     # Get a CvSink. This will capture images from the camera
     cvSink = CS.getVideo()
     # Setup a CvSource. This will send images back to the Dashboard
     outputStream = CS.putVideo("Rectangle", CamVals.kImageWidth, CamVals.kImageHeight)
+
+    grayScaleStream = CS.putVideo("GreyScale", CamVals.kImageWidth, CamVals.kImageHeight)
 
     # Setup an April Tag Detector
     detector = AprTag.AprilTagDetector()
@@ -38,8 +41,7 @@ def main(self):
             # skip the rest of the current iteration
             continue
 
-        # Put a rectangle on the image
-        cv2.rectangle(mat, (100, 100), (400, 400), (255, 255, 255), 5)
+        
 
         # Put the data to NetworkTables
         grayScaleMat = cv2.cvtColor(mat, cv2.COLOR_BGR2GRAY)
@@ -50,8 +52,8 @@ def main(self):
             IDs.append(tag.getId())
         pub_tagIDs.set(IDs)
 
-
         # Give the output stream a new image to display (MUST COME AFTER ALL OTHER PROCESSING CODE)
         outputStream.putFrame(mat)
+        grayScaleStream.putFrame(grayScaleMat)
 
     
