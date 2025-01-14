@@ -8,7 +8,6 @@ import ntcore
 
 def main(self):
     CS.enableLogging()
-    print("vision.py has been executed")
 
     publisher = ntcore.NetworkTableInstance.getDefault()
     pub_tagIDs = publisher.getTable("AprilTag").getIntegerArrayTopic("IDs").publish()
@@ -25,6 +24,7 @@ def main(self):
     # Setup an April Tag Detector
     detector = AprTag.AprilTagDetector()
     detector.addFamily("tag36h11", CamVals.kAprTagBitCorrectionMax)
+
     # Allocating new images is very expensive, always try to preallocate
     mat = np.zeros(shape=(CamVals.kImageHeight, CamVals.kImageWidth, 3), dtype=np.uint8)
 
@@ -41,12 +41,7 @@ def main(self):
         # Put a rectangle on the image
         cv2.rectangle(mat, (100, 100), (400, 400), (255, 255, 255), 5)
 
-        # Give the output stream a new image to display
-        outputStream.putFrame(mat)
-
-
         # Put the data to NetworkTables
-
         grayScaleMat = cv2.cvtColor(mat, cv2.COLOR_BGR2GRAY)
         detections = detector.detect(grayScaleMat)
 
@@ -54,5 +49,9 @@ def main(self):
         for tag in detections:
             IDs.append(tag.getId())
         pub_tagIDs.set(IDs)
+
+
+        # Give the output stream a new image to display (MUST COME AFTER ALL OTHER PROCESSING CODE)
+        outputStream.putFrame(mat)
 
     
