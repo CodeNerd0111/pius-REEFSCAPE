@@ -9,6 +9,7 @@ import smartmotorcontroller
 
 # NOTE: We will initialize all of our motors in this subsystem file
 # Currently, a quad-motor example is being used
+# https://github.com/robotpy/robotpy-rev/blob/main/examples/maxswerve/subsystems/drivesubsystem.py
 
 class DriveSubsystem(commands2.Subsystem):
     def __init__(self) -> None:
