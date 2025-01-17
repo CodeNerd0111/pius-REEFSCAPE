@@ -26,3 +26,4 @@ class CameraConstants:
     kImageWidth = 640
     kImageHeight = 480
     kAprTagBitCorrectionMax = 2
+    kAprilTagSize = 0.1524

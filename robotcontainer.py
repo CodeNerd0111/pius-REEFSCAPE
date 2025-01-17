@@ -125,12 +125,7 @@ class RobotContainer:
         """
         Use this method to define your Trigger->command mappings. 
         """
-
-        # If a tag is detected, print the list of tag IDs to the console.
-        tagIDs = self.publisher.getIntegerArrayTopic("IDs").getEntry([]).get()
-        commands2.button.Trigger(lambda: len(tagIDs) > 0).onTrue(
-            commands2.cmd.runOnce(lambda: print(tagIDs))
-        )
+        pass
 
 
 
