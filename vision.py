@@ -12,6 +12,7 @@ def main():
 
     publisher = ntcore.NetworkTableInstance.getDefault()
     pub_tagIDs = publisher.getTable("AprilTag").getIntegerArrayTopic("IDs").publish()
+    pub_tags = publisher.getTable("April Tag").getStructArrayTopic("__Tags__", AprTag.AprilTagDetection)
     # Get the UsbCamera from CameraServer
     camera = CS.startAutomaticCapture()
     # Set the resolution

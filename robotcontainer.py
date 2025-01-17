@@ -31,6 +31,12 @@ class RobotContainer:
         self.publisher = ntcore.NetworkTableInstance.getDefault()
         self.SetUpNetworkTables()
 
+        # Set up Autonomous Controls
+        self.autoChooser = wpilib.SendableChooser()
+        self.autoChooser.addOption("Just go forward", 1)
+        self.autoChooser.addOption("Just go backward", 2)
+        self.autoChooser.addOption("None", 0)
+
         # Retained command references
         self.driveFullSpeed = commands2.cmd.runOnce(
             lambda: self.robotDrive.setMaxOutput(1), self.robotDrive
@@ -137,4 +143,19 @@ class RobotContainer:
 
         :returns: the command to run in autonomous
         """
-        return commands2.cmd.none()
+        match self.autoChooser.getSelected():
+
+            case 1:
+                return commands.drivedistanceprofiled.DriveDistanceProfiled(
+                    3, self.robotDrive
+                )
+            case 2:
+                return commands.drivedistanceprofiled.DriveDistanceProfiled(
+                    -3, self.robotDrive
+                )
+            case _:
+                return commands2.cmd.none()
+
+
+
+        
