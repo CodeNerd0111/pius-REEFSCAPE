@@ -27,3 +27,5 @@ class CameraConstants:
     kImageHeight = 480
     kAprTagBitCorrectionMax = 2
     kAprilTagSize = 0.1524
+    kVerticalFocalLength = 700
+    kHorizontalFocalLength = 700

@@ -16,11 +16,13 @@ def main():
                     publisher.getTable("AprilTag").getFloatArrayTopic("Position").publish(),
                     publisher.getTable("AprilTag").getFloatArrayTopic("Position [ft]").publish()]
 
+
     # Get the UsbCamera from CameraServer
     camera = CS.startAutomaticCapture()
     # Set the resolution
     camera.setResolution(CamVals.kImageWidth, CamVals.kImageHeight)
     camera.setBrightness(50)
+
     # Get a CvSink. This will capture images from the camera
     cvSink = CS.getVideo()
     # Setup a CvSource. This will send images back to the Dashboard
@@ -32,7 +34,11 @@ def main():
     detector = AprTag.AprilTagDetector()
     detector.addFamily("tag36h11", CamVals.kAprTagBitCorrectionMax)
     estimator = AprTag.AprilTagPoseEstimator(
-        AprTag.AprilTagPoseEstimator.Config(CamVals.kAprilTagSize, fx=CamVals.kImageWidth, fy=CamVals.kImageHeight, cx=CamVals.kImageWidth/2, cy=CamVals.kImageHeight/2))
+        AprTag.AprilTagPoseEstimator.Config(CamVals.kAprilTagSize, 
+                                            fx=CamVals.kHorizontalFocalLength, 
+                                            fy=CamVals.kVerticalFocalLength, 
+                                            cx=CamVals.kImageWidth/2, 
+                                            cy=CamVals.kImageHeight/2))
 
     # Allocating new images is very expensive, always try to preallocate
     mat = np.zeros(shape=(CamVals.kImageHeight, CamVals.kImageWidth, 3), dtype=np.uint8)

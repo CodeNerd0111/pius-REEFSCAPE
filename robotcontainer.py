@@ -12,6 +12,17 @@ import wpimath.trajectory
 import wpilib
 
 
+
+# TODO: Subsystems list
+# 1. Swerve module
+# 2. Elevator Module
+# 3. Manipulator
+# ...
+
+
+
+
+
 class RobotContainer:
     """
     This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,13 +34,12 @@ class RobotContainer:
 
     def __init__(self):
         # The robot's subsystems need to be declared here:
-        self.robotDrive = subsystems.drivesubsystem.DriveSubsystem()
+        self.robotDrive = subsystems.drivesubsystem.DriveSubsystem() # Temporary Declaration
         wpilib.CameraServer.launch("vision.py:main")
 
 
         # Set up NetworkTables
         self.publisher = ntcore.NetworkTableInstance.getDefault()
-        self.SetUpNetworkTables()
 
         # Set up Autonomous Controls
         self.autoChooser = wpilib.SendableChooser()
@@ -37,6 +47,7 @@ class RobotContainer:
         self.autoChooser.addOption("Just go backward", 2)
         self.autoChooser.addOption("None", 0)
 
+        # TODO: Change this to match preferred drivesubsystem
         # Retained command references
         self.driveFullSpeed = commands2.cmd.runOnce(
             lambda: self.robotDrive.setMaxOutput(1), self.robotDrive
@@ -60,6 +71,8 @@ class RobotContainer:
         self.configureButtonBindings()
 
         # Configure default commands
+
+        # TODO: Change this to match preferred drivesubsystem
         # Set the default drive command to split-stick arcade drive
         self.robotDrive.setDefaultCommand(
             # A split-stick arcade command, with forward/backward controlled by the left
@@ -97,29 +110,6 @@ class RobotContainer:
             ).withTimeout(10)
         )
 
-        # Do the same thing as above when the 'B' button is pressed, but defined inline
-        self.XBoxController.b().onTrue(
-            commands2.TrapezoidProfileCommand(
-                wpimath.trajectory.TrapezoidProfile(
-                    # Limit the max acceleration and velocity
-                    wpimath.trajectory.TrapezoidProfile.Constraints(
-                        constants.DriveConstants.kMaxSpeedMetersPerSecond,
-                        constants.DriveConstants.kMaxAccelerationMetersPerSecondSquared,
-                    ),
-                ),
-                # Pipe the profile state to the drive - or in english, tell the robotdrive what to do based on setpointState
-                lambda setpointState: self.robotDrive.setDriveStates(
-                    setpointState, setpointState
-                ),
-                # End at desired position in meters; implicitly starts at 0
-                lambda: wpimath.trajectory.TrapezoidProfile.State(3, 0), # The profile state where we want to be (3 meters ahead)
-                wpimath.trajectory.TrapezoidProfile.State, # The profile state where we are now
-                self.robotDrive, # We will need robotDrive for this command
-            )
-            .beforeStarting(self.robotDrive.resetEncoders)
-            .withTimeout(10)
-        )
-
     
     def ConfigureTriggerCommands(self) -> None:
         """
@@ -127,10 +117,6 @@ class RobotContainer:
         """
         pass
 
-
-
-    def SetUpNetworkTables(self) -> None:
-        pass
 
     def getAutonomousCommand(self) -> commands2.Command:
         """
