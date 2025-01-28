@@ -8,6 +8,7 @@ import ntcore
 import subsystems.drivesubsystem
 import commands.drivedistanceprofiled
 
+import apriltagpackager as ATPackage
 import wpimath.trajectory
 import wpilib
 
@@ -68,10 +69,10 @@ class RobotContainer:
         )
 
         # Configure the button bindings
+        self.configureTriggerCommands()
         self.configureButtonBindings()
 
         # Configure default commands
-
         # TODO: Change this to match preferred drivesubsystem
         # Set the default drive command to split-stick arcade drive
         self.robotDrive.setDefaultCommand(
@@ -111,11 +112,16 @@ class RobotContainer:
         )
 
     
-    def ConfigureTriggerCommands(self) -> None:
+    def configureTriggerCommands(self) -> None:
         """
         Use this method to define your Trigger->command mappings. 
         """
-        pass
+
+        # Example Trigger
+        aprilTagUnpacker = ATPackage.AprilTagUnpacker()
+        self.tagsDetected = commands2.button.Trigger(
+            lambda: len(aprilTagUnpacker.getTags()) > 0
+        )
 
 
     def getAutonomousCommand(self) -> commands2.Command:
