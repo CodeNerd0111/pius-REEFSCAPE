@@ -13,8 +13,6 @@
 #
 # Examples can be found at https://github.com/robotpy/examples
 
-import wpilib.simulation
-
 from pyfrc.physics.core import PhysicsInterface
 from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units

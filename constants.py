@@ -1,7 +1,6 @@
 import math
 from swervepy import u
 import swervepy.impl
-from pint import Quantity
 
 class DriveConstants:
     drive_params = swervepy.impl.TypicalDriveComponentParameters(
