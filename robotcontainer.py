@@ -9,7 +9,7 @@ import subsystems.drivesubsystem
 import commands.drivedistanceprofiled
 
 import apriltagpackager as ATPackage
-import wpimath.trajectory
+import wpimath.geometry as geometry
 import wpilib
 
 
@@ -19,9 +19,6 @@ import wpilib
 # 2. Elevator Module
 # 3. Manipulator
 # ...
-
-
-
 
 
 class RobotContainer:
@@ -50,12 +47,12 @@ class RobotContainer:
 
         # TODO: Change this to match preferred drivesubsystem
         # Retained command references
-        self.driveFullSpeed = commands2.cmd.runOnce(
+        """self.driveFullSpeed = commands2.cmd.runOnce(
             lambda: self.robotDrive.setMaxOutput(1), self.robotDrive
         )
         self.driveHalfSpeed = commands2.cmd.runOnce(
             lambda: self.robotDrive.setMaxOutput(0.5), self.robotDrive
-        )
+        )"""
 
         # The driver's controllers
         self.XBoxController = commands2.button.CommandXboxController(
@@ -79,9 +76,12 @@ class RobotContainer:
             # A split-stick arcade command, with forward/backward controlled by the left
             # hand, and turning controlled by the right.
             commands2.cmd.run(
-                lambda: self.robotDrive.arcadeDrive(
-                    self.leftJoystick.getX(),
-                    self.leftJoystick.getY(),
+                lambda: self.robotDrive.drive(
+                    geometry.Translation2d(
+                        self.leftJoystick.getX(),
+                        self.leftJoystick.getY()),
+                    self.rightJoystick.getY(),
+                    True, True
                 ),
                 self.robotDrive
             )
@@ -100,16 +100,16 @@ class RobotContainer:
         # We can bind commands while retaining references to them in RobotContainer
 
         # Drive at half speed when the bumper is held
-        self.XBoxController.rightBumper().onTrue(self.driveHalfSpeed).onFalse(
+        """self.XBoxController.rightBumper().onTrue(self.driveHalfSpeed).onFalse(
             self.driveFullSpeed
-        )
+        )"""
 
         # Drive forward by 3 meters when the 'A' button is pressed, with a timeout of 10 seconds
-        self.XBoxController.a().onTrue(
+        """self.XBoxController.a().onTrue(
             commands.drivedistanceprofiled.DriveDistanceProfiled(
                 3, self.robotDrive
             ).withTimeout(10)
-        )
+        )"""
 
     
     def configureTriggerCommands(self) -> None:

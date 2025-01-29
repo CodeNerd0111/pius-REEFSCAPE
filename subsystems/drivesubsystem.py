@@ -1,114 +1,49 @@
-import wpilib
-import wpilib.drive
-import commands2
-import wpimath.controller
-import wpimath.trajectory
+import swervepy.subsystem
+import swervepy.impl
+from constants import DriveConstants as c
+from wpimath.geometry import Rotation2d, Translation2d
 
-import constants
-import smartmotorcontroller
+class DriveSubsystem(swervepy.subsystem.SwerveDrive):
 
-# NOTE: We will initialize all of our motors in this subsystem file
-# Currently, a quad-motor example is being used
-# https://github.com/robotpy/robotpy-rev/blob/main/examples/maxswerve/subsystems/drivesubsystem.py
-
-class DriveSubsystem(commands2.Subsystem):
-    def __init__(self) -> None:
-        """Creates a new DriveSubsystem"""
-        super().__init__()
-        # The motors on the left side of the drive. - Main
-        self.leftLeader = smartmotorcontroller.SmartMotorController(
-            constants.DriveConstants.kLeftMotor1Port
-        )
-        # Follows the main left motor so both can be passed into the Differential Drive
-        self.leftFollower = smartmotorcontroller.SmartMotorController(
-            constants.DriveConstants.kLeftMotor2Port
-        )
-
-        # The motors on the right side of the drive. - Main
-        self.rightLeader = smartmotorcontroller.SmartMotorController(
-            constants.DriveConstants.kRightMotor1Port
-        )
-        # Follows the main right motor so both can be passed into the Differential Drive
-        self.rightFollower = smartmotorcontroller.SmartMotorController(
-            constants.DriveConstants.kRightMotor2Port
-        )
-
-        # We need to invert one side of the drivetrain so that positive voltages
-        # result in both sides moving forward. Depending on how your robot's
-        # gearbox is constructed, you might have to invert the left side instead.
-        # self.rightLeader.setInverted(True)
-
-        # You might need to not do this depending on the specific motor controller
-        # that you are using -- contact the respective vendor's documentation for
-        # more details.
-        # self.rightFollower.setInverted(True)
-
-        self.leftFollower.follow(self.leftLeader)
-        self.rightFollower.follow(self.rightLeader)
-
-        self.leftLeader.setPID(constants.DriveConstants.kp, 0, 0)
-        self.rightLeader.setPID(constants.DriveConstants.kp, 0, 0)
-
-        # The feedforward controller (note that these are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!)
-        # check DriveConstants for more information.
-        self.feedforward = wpimath.controller.SimpleMotorFeedforwardMeters(
-            constants.DriveConstants.ksVolts,
-            constants.DriveConstants.kvVoltSecondsPerMeter,
-            constants.DriveConstants.kMaxAccelerationMetersPerSecondSquared,
-        )
-
-        # The robot's drive
-        self.drive = wpilib.drive.DifferentialDrive(self.leftLeader, self.rightLeader)
-
-    def arcadeDrive(self, fwd: float, rot: float):
+    def __init__(self):
+        """"
+        Creates a swerve drive subsystem
         """
-        Drives the robot using arcade controls.
+        # Drive Components
+        m_frontLeft = swervepy.impl.NEOCoaxialDriveComponent(c.fL_MotorPort, c.drive_params)
+        m_backLeft = swervepy.impl.NEOCoaxialDriveComponent(c.bL_MotorPort, c.drive_params)
+        m_frontRight = swervepy.impl.NEOCoaxialDriveComponent(c.fR_MotorPort, c.drive_params)
+        m_backRight = swervepy.impl.NEOCoaxialDriveComponent(c.bR_MotorPort, c.drive_params)
 
-        :param fwd: the commanded forward movement
-        :param rot: the commanded rotation
-        """
-        self.drive.arcadeDrive(fwd, rot)
+        # Encoders
+        enc_frontLeft = swervepy.impl.AbsoluteCANCoder(c.fL_EncoderPort)
+        enc_backLeft = swervepy.impl.AbsoluteCANCoder(c.bL_EncoderPort)
+        enc_frontRight = swervepy.impl.AbsoluteCANCoder(c.fR_EncoderPort)
+        enc_backRight = swervepy.impl.AbsoluteCANCoder(c.bR_EncoderPort)
 
-    def setDriveStates(
-        self,
-        left: wpimath.trajectory.TrapezoidProfile.State,
-        right: wpimath.trajectory.TrapezoidProfile.State,
-    ):
-        """
-        Attempts to follow the given drive states using offboard PID.
+        # Azimuth module offset. This is the value reported by the absolute encoder when the wheel is pointed straight.
+        offset = Rotation2d.fromDegrees(0)
+        # Azimuth Components
+        a_frontLeft = swervepy.impl.NEOCoaxialAzimuthComponent(c.fL_AzimuthPort, offset, c.azimuth_params, enc_frontLeft)
+        a_backLeft = swervepy.impl.NEOCoaxialAzimuthComponent(c.bL_AzimuthPort, offset, c.azimuth_params, enc_backLeft)
+        a_frontRight = swervepy.impl.NEOCoaxialAzimuthComponent(c.fR_AzimuthPort, offset, c.azimuth_params, enc_frontRight)
+        a_backRight = swervepy.impl.NEOCoaxialAzimuthComponent(c.bR_AzimuthPort, offset, c.azimuth_params, enc_backRight)
 
-        :param left:  The left wheel state.
-        :param right: The right wheel state.
-        """
-        self.leftLeader.setSetPoint(
-            smartmotorcontroller.SmartMotorController.PIDMode.kPosition,
-            left.position,
-            self.feedforward.calculate(left.velocity),
+        # Swerve Modules
+        frontLeft = swervepy.impl.CoaxialSwerveModule(
+            m_frontLeft, a_frontLeft, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+        backLeft = swervepy.impl.CoaxialSwerveModule(
+            m_backLeft, a_backLeft, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+        frontRight = swervepy.impl.CoaxialSwerveModule(
+            m_frontRight, a_frontRight, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+        backRight = swervepy.impl.CoaxialSwerveModule(
+            m_backRight, a_backRight, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+        
+        gyro = swervepy.impl.DummyGyro() # Replace with real gyro
+
+        super().__init__(
+            [frontLeft, backLeft, frontRight, backRight],
+            gyro,
+            c.maxVelocity,
+            c.maxAngularVelocity
         )
-
-        self.rightLeader.setSetPoint(
-            smartmotorcontroller.SmartMotorController.PIDMode.kPosition,
-            right.position,
-            self.feedforward.calculate(right.velocity),
-        )
-
-    def getLeftEncoderDistance(self) -> float:
-        """Returns the left drive encoder distance."""
-        return self.leftLeader.getEncoderDistance()
-
-    def getRightEncoderDistance(self) -> float:
-        """Returns the right drive encoder distance."""
-        return self.rightLeader.getEncoderDistance()
-
-    def resetEncoders(self):
-        """Resets the drive encoders"""
-        self.leftLeader.resetEncoder()
-        self.rightLeader.resetEncoder()
-
-    def setMaxOutput(self, maxOutput: float):
-        """
-        Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
-
-        :param maxOutput: the maximum output to which the drive will be constrained
-        """
-        self.drive.setMaxOutput(maxOutput) # maxOutput is multiplied to the motor power value, so a value of 1 is normal.

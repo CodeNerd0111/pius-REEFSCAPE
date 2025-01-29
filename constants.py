@@ -1,21 +1,59 @@
 import math
-
+from swervepy import u
+import swervepy.impl
+from pint import Quantity
 
 class DriveConstants:
-    kLeftMotor1Port = 0
-    kLeftMotor2Port = 1
-    kRightMotor1Port = 2
-    kRightMotor2Port = 3
+    drive_params = swervepy.impl.TypicalDriveComponentParameters(
+        wheel_circumference=4 * math.pi * u.inch,
+        gear_ratio=6.75 / 1,  # SDS Mk4i L2
+        max_speed=4.5 * (u.m / u.s),
+        open_loop_ramp_rate=0,
+        closed_loop_ramp_rate=0,
+        continuous_current_limit=40,
+        peak_current_limit=60,
+        peak_current_duration=0.01,
+        neutral_mode=swervepy.impl.NeutralMode.COAST,
+        kP=0,
+        kI=0,
+        kD=0,
+        kS=0,
+        kV=0,
+        kA=0,
+        invert_motor=False,
+    )
+    azimuth_params = swervepy.impl.TypicalAzimuthComponentParameters(
+        gear_ratio=150 / 7,  # SDS Mk4i
+        max_angular_velocity=11.5 * (u.rad / u.s),
+        ramp_rate=0,
+        continuous_current_limit=40,
+        peak_current_limit=60,
+        peak_current_duration=0.01,
+        neutral_mode=swervepy.impl.NeutralMode.BRAKE,
+        kP=0.3,
+        kI=0,
+        kD=0,
+        invert_motor=False,
+    )
 
-    ksVolts = 1
-    kvVoltSecondsPerMeter = 0.8
-    kaVoltSecondsSquaredPerMeter = 0.15
+    fL_MotorPort = 0
+    bL_MotorPort = 2
+    fR_MotorPort = 4
+    bR_MotorPort = 6
+    fL_AzimuthPort = 1
+    bL_AzimuthPort = 3
+    fR_AzimuthPort = 5
+    bR_AzimuthPort = 7
+    fL_EncoderPort = 8
+    bL_EncoderPort = 9
+    fR_EncoderPort = 10
+    bR_EncoderPort = 11
 
-    kp = 1
+    wheelBase = 0.05
+    trackWidth = 1.8
 
-    kMaxSpeedMetersPerSecond = 3
-    kMaxAccelerationMetersPerSecondSquared = 3
-
+    maxVelocity = 5 * (u.m / u.s)
+    maxAngularVelocity = 3 * (u.rad / u.s)
 
 class OIConstants:
     kXBoxControllerPort = 2

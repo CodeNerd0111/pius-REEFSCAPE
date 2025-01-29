@@ -35,4 +35,6 @@ requires = [
 "robotpy-cscore",
 "robotpy-opencv; platform_machine == 'roborio'",
 "opencv-python; platform_machine != 'roborio'",
+"robotpy-pathplannerlib",
+"robotpy-ctre"
 ]

@@ -45,10 +45,10 @@ class PhysicsEngine:
         # Change these parameters to fit your robot!
 
         # Motors
-        self.leftLeader = wpilib.simulation.PWMSim(robot.container.robotDrive.leftLeader.motor)
+        """self.leftLeader = wpilib.simulation.PWMSim(robot.container.robotDrive.leftLeader.motor)
         self.rightLeader = wpilib.simulation.PWMSim(robot.container.robotDrive.rightLeader.motor)
         self.leftFollower = wpilib.simulation.PWMSim(robot.container.robotDrive.leftFollower.motor)
-        self.rightFollower = wpilib.simulation.PWMSim(robot.container.robotDrive.rightFollower.motor)
+        self.rightFollower = wpilib.simulation.PWMSim(robot.container.robotDrive.rightFollower.motor)"""
 
         bumper_width = 3.25 * units.inch
 
@@ -76,10 +76,10 @@ class PhysicsEngine:
 
         
         # Simulate the drivetrain
-        l_motor = self.leftLeader.getSpeed()
+        """l_motor = self.leftLeader.getSpeed()
         r_motor = self.rightLeader.getSpeed()
 
         transform = self.drivetrain.calculate(l_motor, r_motor, tm_diff)
-        pose = self.physics_controller.move_robot(transform)
+        pose = self.physics_controller.move_robot(transform)"""
         
 

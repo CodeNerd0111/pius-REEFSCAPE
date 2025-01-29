@@ -10,7 +10,7 @@ import commands2
 from pathplannerlib.path import PathPlannerPath
 from pathplannerlib.commands import FollowPathCommand
 from pathplannerlib.controller import PPHolonomicDriveController
-from pathplannerlib.config import ReplanningConfig, PIDConstants
+from pathplannerlib.config import RobotConfig, PIDConstants
 import wpilib
 import wpilib.sysid
 import wpimath.estimator
@@ -269,7 +269,7 @@ class SwerveDrive(commands2.Subsystem):
             # Associate each swerve module with a number if no names were provided
             modules = enumerate(self._modules)
 
-        for name, module in modules:  # type: str | int, SwerveModule
+        for name, module in modules:  # type: ignore # type: str | int, SwerveModule
             (
                 log.motor(str(name))
                 .voltage(module.drive_voltage)
@@ -339,7 +339,7 @@ class SwerveDrive(commands2.Subsystem):
             lambda: self.robot_relative_speeds,
             lambda speeds: self.drive(speeds, drive_open_loop=drive_open_loop),
             controller,
-            ReplanningConfig(),
+            RobotConfig(),
             flip_path,
             self,
         )

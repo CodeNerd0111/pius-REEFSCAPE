@@ -135,7 +135,7 @@ class SparkMaxEncoderType(enum.Enum):
 
 
 class SparkMaxAbsoluteEncoder(AbsoluteEncoder):
-    def __init__(self, controller: rev.CANSparkMax, encoder_type: SparkMaxEncoderType):
+    def __init__(self, controller: rev.SparkMax, encoder_type: SparkMaxEncoderType):
         """
         Absolute encoder plugged into the SPARK MAX's data port
 
@@ -147,20 +147,19 @@ class SparkMaxAbsoluteEncoder(AbsoluteEncoder):
 
         # Two types of absolute encoders can be plugged into the SPARK MAX data port: analog and duty cycle/PWM
         if encoder_type is SparkMaxEncoderType.ANALOG:
-            self._encoder = controller.getAnalog(rev.SparkMaxAnalogSensor.Mode.kAbsolute)
-
+            self._encoder = controller.getAnalog()
             # Analog encoders output from 0V - 3.3V
             # Change from voltage to degrees
-            self._encoder.setPositionConversionFactor(360 / 3.3)
+            self._encoderConversionFactor = 360 / 3.3
         elif encoder_type is SparkMaxEncoderType.PWM:
-            self._encoder = controller.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
+            self._encoder = controller.getAbsoluteEncoder()
 
             # Duty cycle encoders output from 0 to 1 by default
             # Change into degrees
-            self._encoder.setPositionConversionFactor(360)
+            self._encoderConversionFactor = 360
 
         wpilib.SmartDashboard.putData(f"Absolute Encoder {controller.getDeviceId()}", self)
 
     @property
     def absolute_position(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(self._encoder.getPosition())
+        return Rotation2d.fromDegrees(self._encoder.getPosition() * self._encoderConversionFactor)

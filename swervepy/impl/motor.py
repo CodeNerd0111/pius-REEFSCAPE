@@ -252,8 +252,8 @@ class NEOCoaxialDriveComponent(CoaxialDriveComponent):
     def __init__(self, id_: int, parameters: TypicalDriveComponentParameters):
         self._params = parameters.in_standard_units()
 
-        self._motor = rev.CANSparkMax(id_, rev.CANSparkMax.MotorType.kBrushless)
-        self._controller = self._motor.getPIDController()
+        self._motor = rev.SparkMax(id_, rev.SparkMax.MotorType.kBrushless)
+        self._controller = self._motor.getClosedLoopController()
         self._encoder = self._motor.getEncoder()
         self._config()
         self.reset()
@@ -265,26 +265,29 @@ class NEOCoaxialDriveComponent(CoaxialDriveComponent):
         self._sim_position = sim_motor.getDouble("Position")
 
     def _config(self):
-        self._motor.restoreFactoryDefaults()
+        
+        motorConfig = rev.SparkBaseConfig()
 
-        self._controller.setP(self._params.kP)
-        self._controller.setI(self._params.kI)
-        self._controller.setD(self._params.kD)
+        motorConfig.closedLoop.P(self._params.kP)
+        motorConfig.closedLoop.I(self._params.kI)
+        motorConfig.closedLoop.D(self._params.kD)
 
-        self._motor.setSmartCurrentLimit(self._params.continuous_current_limit)
-        self._motor.setSecondaryCurrentLimit(self._params.peak_current_limit)
+        motorConfig.smartCurrentLimit(self._params.continuous_current_limit)
+        motorConfig.secondaryCurrentLimit(self._params.peak_current_limit)
 
-        self._motor.setOpenLoopRampRate(self._params.open_loop_ramp_rate)
-        self._motor.setClosedLoopRampRate(self._params.closed_loop_ramp_rate)
+        motorConfig.openLoopRampRate(self._params.open_loop_ramp_rate)
+        motorConfig.closedLoopRampRate(self._params.closed_loop_ramp_rate)
 
         self._motor.setInverted(self._params.invert_motor)
 
         # Convert generic neutral mode to REV IdleMode
-        self._motor.setIdleMode(rev.CANSparkMax.IdleMode(self._params.neutral_mode))
+        motorConfig.setIdleMode(rev.SparkBaseConfig.IdleMode(self._params.neutral_mode))
 
         position_conversion_factor = self._params.wheel_circumference / self._params.gear_ratio
-        self._encoder.setPositionConversionFactor(position_conversion_factor)
-        self._encoder.setVelocityConversionFactor(position_conversion_factor / 60)
+        motorConfig.encoder.positionConversionFactor(position_conversion_factor)
+        motorConfig.encoder.velocityConversionFactor(position_conversion_factor / 60)
+
+        self._motor.configure(motorConfig, rev.SparkBase.ResetMode(1), rev.SparkBase.PersistMode(0))
 
     def follow_velocity_open(self, velocity: float):
         percent_out = velocity / self._params.max_speed
@@ -295,7 +298,7 @@ class NEOCoaxialDriveComponent(CoaxialDriveComponent):
     def follow_velocity_closed(self, velocity: float):
         self._controller.setReference(
             velocity,
-            rev.CANSparkMax.ControlType.kVelocity,
+            rev.SparkMax.ControlType.kVelocity,
             arbFeedforward=self._feedforward.calculate(velocity),
         )
 
@@ -332,8 +335,8 @@ class NEOCoaxialAzimuthComponent(CoaxialAzimuthComponent):
     ):
         self._params = parameters.in_standard_units()
 
-        self._motor = rev.CANSparkMax(id_, rev.CANSparkMax.MotorType.kBrushless)
-        self._controller = self._motor.getPIDController()
+        self._motor = rev.SparkMax(id_, rev.SparkMax.MotorType.kBrushless)
+        self._controller = self._motor.getClosedLoopController()
         self._encoder = self._motor.getEncoder()
 
         # Config must be called before the absolute encoder is set up because config method
@@ -354,27 +357,30 @@ class NEOCoaxialAzimuthComponent(CoaxialAzimuthComponent):
         self._sim_position = sim_motor.getDouble("Position")
 
     def _config(self):
-        self._motor.restoreFactoryDefaults()
 
-        self._controller.setP(self._params.kP)
-        self._controller.setI(self._params.kI)
-        self._controller.setD(self._params.kD)
+        motorConfig = rev.SparkBaseConfig()
 
-        self._motor.setSmartCurrentLimit(self._params.continuous_current_limit)
-        self._motor.setSecondaryCurrentLimit(self._params.peak_current_limit)
+        motorConfig.closedLoop.P(self._params.kP)
+        motorConfig.closedLoop.I(self._params.kI)
+        motorConfig.closedLoop.D(self._params.kD)
+
+        motorConfig.smartCurrentLimit(self._params.continuous_current_limit)
+        motorConfig.secondaryCurrentLimit(self._params.peak_current_limit)
 
         self._motor.setInverted(self._params.invert_motor)
 
         # Convert generic neutral mode to REV IdleMode
-        self._motor.setIdleMode(rev.CANSparkMax.IdleMode(self._params.neutral_mode))
+        motorConfig.setIdleMode(rev.SparkBaseConfig.IdleMode(self._params.neutral_mode))
 
         position_conversion_factor = 360 / self._params.gear_ratio
-        self._encoder.setPositionConversionFactor(position_conversion_factor)
-        self._encoder.setVelocityConversionFactor(position_conversion_factor / 60)
+        motorConfig.encoder.positionConversionFactor(position_conversion_factor)
+        motorConfig.encoder.velocityConversionFactor(position_conversion_factor / 60)
+        
+        self._motor.configure(motorConfig, rev.SparkBase.ResetMode(1), rev.SparkBase.PersistMode(0))
 
     def follow_angle(self, angle: Rotation2d):
         degrees = angle.degrees()
-        self._controller.setReference(degrees, rev.CANSparkMax.ControlType.kPosition)
+        self._controller.setReference(degrees, rev.SparkMax.ControlType.kPosition)
 
         self._sim_position.set(degrees)
 
