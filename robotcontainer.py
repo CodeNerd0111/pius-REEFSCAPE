@@ -78,8 +78,8 @@ class RobotContainer:
             commands2.cmd.run(
                 lambda: self.robotDrive.drive(
                     geometry.Translation2d(
-                        self.leftJoystick.getX(),
-                        self.leftJoystick.getY()),
+                        -self.leftJoystick.getX(),
+                        -self.leftJoystick.getY()),
                     self.rightJoystick.getY(),
                     True, True
                 ),

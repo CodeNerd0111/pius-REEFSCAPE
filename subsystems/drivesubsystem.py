@@ -34,11 +34,11 @@ class DriveSubsystem(swervepy.subsystem.SwerveDrive):
         frontLeft = swervepy.impl.CoaxialSwerveModule(
             m_frontLeft, a_frontLeft, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
         backLeft = swervepy.impl.CoaxialSwerveModule(
-            m_backLeft, a_backLeft, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+            m_backLeft, a_backLeft, Translation2d(-c.wheelBase / 2, c.trackWidth / 2))
         frontRight = swervepy.impl.CoaxialSwerveModule(
-            m_frontRight, a_frontRight, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+            m_frontRight, a_frontRight, Translation2d(c.wheelBase / 2, -c.trackWidth / 2))
         backRight = swervepy.impl.CoaxialSwerveModule(
-            m_backRight, a_backRight, Translation2d(c.wheelBase / 2, c.trackWidth / 2))
+            m_backRight, a_backRight, Translation2d(-c.wheelBase / 2, -c.trackWidth / 2))
         
         gyro = swervepy.impl.DummyGyro() # Replace with real gyro
 

@@ -76,12 +76,13 @@ class PhysicsEngine:
         motorPositions = tuple(motor.getDouble("Position").get() for motor in self.motors)
         motorSpeeds = tuple(motor.getDouble("Velocity").get() for motor in self.motors)
         chassisSpeeds = four_motor_swerve_drivetrain(motorSpeeds[0],
-                                                     motorSpeeds[1],
                                                      motorSpeeds[2],
+                                                     motorSpeeds[1],
                                                      motorSpeeds[3],
                                                      motorPositions[4],
-                                                     motorPositions[5],
                                                      motorPositions[6],
+                                                     motorPositions[5],
                                                      motorPositions[7]
                                                      )
+        chassisSpeeds = chassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds, self.gyro.getAngle())
         pose = self.physics_controller.drive(chassisSpeeds, tm_diff)
