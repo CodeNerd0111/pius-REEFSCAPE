@@ -31,7 +31,7 @@
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "109,246",
+      "Pos": "154,252",
       "Size": "1041,552"
     },
     "###FMS": {
@@ -41,17 +41,17 @@
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "300,688",
+      "Pos": "232,925",
       "Size": "976,179"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "344,329",
+      "Pos": "208,10",
       "Size": "937,654"
     },
     "###NetworkTables Info": {
       "Collapsed": "0",
-      "Pos": "300,179",
+      "Pos": "292,91",
       "Size": "937,181"
     },
     "###Other Devices": {

@@ -6,7 +6,6 @@ import constants
 import ntcore
 
 import subsystems.drivesubsystem
-import commands.drivedistanceprofiled
 
 import visionprocessing.apriltagpackager as ATPackage
 from wpimath import geometry
@@ -45,15 +44,6 @@ class RobotContainer:
         self.autoChooser.addOption("Just go backward", 2)
         self.autoChooser.addOption("None", 0)
 
-        # TODO: Change this to match preferred drivesubsystem
-        # Retained command references
-        """self.driveFullSpeed = commands2.cmd.runOnce(
-            lambda: self.robotDrive.setMaxOutput(1), self.robotDrive
-        )
-        self.driveHalfSpeed = commands2.cmd.runOnce(
-            lambda: self.robotDrive.setMaxOutput(0.5), self.robotDrive
-        )"""
-
         # The driver's controllers
         self.XBoxController = commands2.button.CommandXboxController(
             constants.OIConstants.kXBoxControllerPort
@@ -70,7 +60,6 @@ class RobotContainer:
         self.configureButtonBindings()
 
         # Configure default commands
-        # TODO: Change this to match preferred drivesubsystem
         # Set the default drive command to split-stick arcade drive
         self.robotDrive.setDefaultCommand(
             # A split-stick arcade command, with forward/backward controlled by the left
@@ -98,18 +87,7 @@ class RobotContainer:
         # Configure your button bindings here
 
         # We can bind commands while retaining references to them in RobotContainer
-
-        # Drive at half speed when the bumper is held
-        """self.XBoxController.rightBumper().onTrue(self.driveHalfSpeed).onFalse(
-            self.driveFullSpeed
-        )"""
-
-        # Drive forward by 3 meters when the 'A' button is pressed, with a timeout of 10 seconds
-        """self.XBoxController.a().onTrue(
-            commands.drivedistanceprofiled.DriveDistanceProfiled(
-                3, self.robotDrive
-            ).withTimeout(10)
-        )"""
+        pass
 
     
     def configureTriggerCommands(self) -> None:
@@ -133,13 +111,9 @@ class RobotContainer:
         match self.autoChooser.getSelected():
 
             case 1:
-                return commands.drivedistanceprofiled.DriveDistanceProfiled(
-                    3, self.robotDrive
-                )
+                return commands2.cmd.none()
             case 2:
-                return commands.drivedistanceprofiled.DriveDistanceProfiled(
-                    -3, self.robotDrive
-                )
+                return commands2.cmd.none()
             case _:
                 return commands2.cmd.none()
 

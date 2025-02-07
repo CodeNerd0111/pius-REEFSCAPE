@@ -84,5 +84,4 @@ class PhysicsEngine:
                                                      motorPositions[5],
                                                      motorPositions[7]
                                                      )
-        chassisSpeeds = chassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds, self.gyro.getAngle())
         pose = self.physics_controller.drive(chassisSpeeds, tm_diff)
