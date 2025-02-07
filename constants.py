@@ -52,6 +52,7 @@ class DriveConstants:
     trackWidth = 1.8
 
     maxVelocity = 5 * (u.m / u.s)
+    maxAcceleration = 1 * (u.m / u.s / u.s)
     maxAngularVelocity = 3 * (u.rad / u.s)
 
 class OIConstants:

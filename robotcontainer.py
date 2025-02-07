@@ -9,7 +9,7 @@ import subsystems.drivesubsystem
 import commands.drivedistanceprofiled
 
 import visionprocessing.apriltagpackager as ATPackage
-import wpimath.geometry as geometry
+from wpimath import geometry
 import wpilib
 
 
@@ -32,7 +32,7 @@ class RobotContainer:
 
     def __init__(self):
         # The robot's subsystems need to be declared here:
-        self.robotDrive = subsystems.drivesubsystem.DriveSubsystem() # Temporary Declaration
+        self.robotDrive = subsystems.drivesubsystem.DriveSubsystem()
         wpilib.CameraServer.launch("vision.py:main")
 
 

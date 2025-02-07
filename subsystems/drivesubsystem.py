@@ -2,6 +2,7 @@ import swervepy.subsystem
 import swervepy.impl
 from constants import DriveConstants as c
 from wpimath.geometry import Rotation2d, Translation2d
+import wpimath.trajectory
 
 class DriveSubsystem(swervepy.subsystem.SwerveDrive):
 
@@ -47,3 +48,10 @@ class DriveSubsystem(swervepy.subsystem.SwerveDrive):
             c.maxVelocity,
             c.maxAngularVelocity
         )
+    
+    class TrajectoryFollowerParameters:
+        max_drive_velocity = c.maxVelocity
+
+        # Positional PID constants for X, Y, and theta (rotation) controllers
+        theta_kP = c.azimuth_params.kP
+        xy_kP = c.drive_params.kP

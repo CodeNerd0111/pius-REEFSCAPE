@@ -16,6 +16,8 @@
 from pyfrc.physics.core import PhysicsInterface
 from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units
+from pyfrc.physics.drivetrains import four_motor_swerve_drivetrain
+from wpilib import simulation
 
 import typing
 
@@ -36,17 +38,14 @@ class PhysicsEngine:
         """
 
         self.physics_controller = physics_controller
-
-        print("TODO: modify simulation for my robot")
-
+        self.robotDrive = robot.container.robotDrive
+        deviceNames = simulation.SimDeviceSim.enumerateDevices()
+        self.devices:list[simulation.SimDeviceSim] = (simulation.SimDeviceSim(str(name)) for name in deviceNames)
+        self.motors:list[simulation.SimDeviceSim] = []
+        for device in self.devices:
+            if len(device.getName()) < 15:
+                self.motors.append(device)
         
-        # Change these parameters to fit your robot!
-
-        # Motors
-        """self.leftLeader = wpilib.simulation.PWMSim(robot.container.robotDrive.leftLeader.motor)
-        self.rightLeader = wpilib.simulation.PWMSim(robot.container.robotDrive.rightLeader.motor)
-        self.leftFollower = wpilib.simulation.PWMSim(robot.container.robotDrive.leftFollower.motor)
-        self.rightFollower = wpilib.simulation.PWMSim(robot.container.robotDrive.rightFollower.motor)"""
 
         bumper_width = 3.25 * units.inch
 
@@ -72,12 +71,19 @@ class PhysicsEngine:
                         time that this function was called
         """
 
-        
         # Simulate the drivetrain
-        """l_motor = self.leftLeader.getSpeed()
-        r_motor = self.rightLeader.getSpeed()
-
-        transform = self.drivetrain.calculate(l_motor, r_motor, tm_diff)
-        pose = self.physics_controller.move_robot(transform)"""
         
 
+        motorPositions = tuple(motor.getDouble("Position").get() for motor in self.motors)
+        motorSpeeds = tuple(motor.getDouble("Velocity").get() for motor in self.motors)
+        chassisSpeeds = four_motor_swerve_drivetrain(motorSpeeds[0],
+                                                     motorSpeeds[1],
+                                                     motorSpeeds[2],
+                                                     motorSpeeds[3],
+                                                     motorPositions[4],
+                                                     motorPositions[5],
+                                                     motorPositions[6],
+                                                     motorPositions[7]
+                                                     )
+        pose = self.physics_controller.drive(chassisSpeeds, tm_diff)
+        print(pose.toMatrix())

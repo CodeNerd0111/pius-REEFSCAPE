@@ -346,7 +346,7 @@ class SwerveDrive(commands2.Subsystem):
 
         # If this is the first path in a sequence, reset the robot's pose so that it aligns with the start of the path
         if first_path:
-            initial_pose = path.getPreviewStartingHolonomicPose()
+            initial_pose = path.getStartingHolonomicPose()
             command = command.beforeStarting(commands2.InstantCommand(lambda: self.reset_odometry(initial_pose)))
 
         return command

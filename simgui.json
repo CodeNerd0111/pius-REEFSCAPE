@@ -1,8 +1,15 @@
 {
   "HALProvider": {
-    "PWM Outputs": {
-      "window": {
-        "visible": true
+    "Other Devices": {
+      "SPARK MAX [0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [7]": {
+        "header": {
+          "open": true
+        }
       }
     }
   },
@@ -27,40 +34,21 @@
   },
   "NetworkTables": {
     "transitory": {
-      "AprilTag": {
-        "int[]##v_/AprilTag/IDs": {
+      "SmartDashboard": {
+        "Absolute CANCoder 10": {
+          "open": true
+        },
+        "Module 3": {
           "open": true
         },
         "open": true
-      },
-      "CameraPublisher": {
-        "Rectangle": {
-          "open": true
-        },
-        "USB Camera 0": {
-          "open": true
-        }
-      },
-      "SmartDashboard": {
-        "Field": {
-          "open": true
-        }
       }
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
-    "Server": {
-      "Publishers": {
-        "open": true
-      },
-      "Subscribers": {
-        "open": true
-      },
-      "open": true
-    },
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }
