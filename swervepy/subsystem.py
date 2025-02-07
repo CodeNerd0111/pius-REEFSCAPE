@@ -109,7 +109,7 @@ class SwerveDrive(commands2.Subsystem):
         robot_pose = self._odometry.update(self._gyro.heading, self.module_positions)
 
         # Visualize robot position on field
-        self.field.setRobotPose(robot_pose)
+        # self.field.setRobotPose(robot_pose)
 
     def simulationPeriodic(self):
         # Run a periodic simulation method that updates sensor readings based on desired velocities and rotations

@@ -35,20 +35,11 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
-        "Absolute CANCoder 10": {
-          "open": true
-        },
-        "Module 3": {
-          "open": true
-        },
         "open": true
       }
     }
   },
   "NetworkTables Info": {
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }

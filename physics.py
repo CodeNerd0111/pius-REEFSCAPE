@@ -38,7 +38,6 @@ class PhysicsEngine:
         """
 
         self.physics_controller = physics_controller
-        self.robotDrive = robot.container.robotDrive
         deviceNames = simulation.SimDeviceSim.enumerateDevices()
         self.devices:list[simulation.SimDeviceSim] = (simulation.SimDeviceSim(str(name)) for name in deviceNames)
         self.motors:list[simulation.SimDeviceSim] = []
@@ -86,4 +85,3 @@ class PhysicsEngine:
                                                      motorPositions[7]
                                                      )
         pose = self.physics_controller.drive(chassisSpeeds, tm_diff)
-        print(pose.toMatrix())
