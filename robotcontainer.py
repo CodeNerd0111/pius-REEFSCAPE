@@ -10,6 +10,7 @@ import subsystems.drivesubsystem
 import visionprocessing.apriltagpackager as ATPackage
 from wpimath import geometry
 import wpilib
+from pathplannerlib.path import PathPlannerPath
 
 
 
@@ -73,7 +74,10 @@ class RobotContainer:
                     True, True
                 ),
                 self.robotDrive
-            )
+            ).beforeStarting(self.robotDrive.follow_trajectory_command(
+                    PathPlannerPath.fromChoreoTrajectory("goToCage"), 
+                    self.robotDrive.TrajectoryFollowerParameters,
+                    self.robotDrive.RobotConfigControls.config))
         )
         
 
@@ -111,7 +115,9 @@ class RobotContainer:
         match self.autoChooser.getSelected():
 
             case 1:
-                return commands2.cmd.none()
+                return self.robotDrive.follow_trajectory_command(
+                    PathPlannerPath.fromChoreoTrajectory("goToCage.chor"), 
+                    self.robotDrive.TrajectoryFollowerParameters)
             case 2:
                 return commands2.cmd.none()
             case _:

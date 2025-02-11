@@ -10,11 +10,12 @@ import commands2
 from pathplannerlib.path import PathPlannerPath
 from pathplannerlib.commands import FollowPathCommand
 from pathplannerlib.controller import PPHolonomicDriveController
-from pathplannerlib.config import RobotConfig, PIDConstants
+from pathplannerlib.config import RobotConfig, PIDConstants, ModuleConfig
 import wpilib
 import wpilib.sysid
 import wpimath.estimator
 import wpimath.kinematics
+from wpimath.system.plant import DCMotor
 from pint import Quantity
 from wpimath.geometry import Pose2d, Translation2d, Rotation2d
 from wpimath.kinematics import ChassisSpeeds, SwerveModuleState, SwerveModulePosition
@@ -302,6 +303,7 @@ class SwerveDrive(commands2.Subsystem):
         self,
         path: PathPlannerPath,
         parameters: "TrajectoryFollowerParameters",
+        robotConfig: "RobotConfig",
         first_path: bool = False,
         drive_open_loop: bool = False,
         flip_path: Callable[[], bool] = lambda: False,
@@ -328,18 +330,18 @@ class SwerveDrive(commands2.Subsystem):
         controller = PPHolonomicDriveController(
             PIDConstants(parameters.xy_kP),
             PIDConstants(parameters.theta_kP),
-            parameters.max_drive_velocity.m_as(u.m / u.s),
-            radius,
+            # parameters.max_drive_velocity.m_as(u.m / u.s),
+            radius
         )
-
+        
         # Trajectory follower command
         command = FollowPathCommand(
             path,
             lambda: self.pose,
             lambda: self.robot_relative_speeds,
-            lambda speeds: self.drive(speeds, drive_open_loop=drive_open_loop),
+            lambda speeds, feedforwards: self.drive(speeds, drive_open_loop=drive_open_loop),
             controller,
-            RobotConfig(),
+            robotConfig,
             flip_path,
             self,
         )
@@ -426,6 +428,28 @@ class TrajectoryFollowerParameters:
     theta_kP: float
     xy_kP: float
 
+@dataclass
+class RobotConfigControls:
+    """massKG: float
+    MOI: float
+    moduleOffsets: list[Translation2d]
+    wheelRadiusMeters: float
+    maxDriveVelocityMPS: float
+    wheelCOF: float
+    driveCurrentLimit: float
+    numMotors: int
+
+    nominalVoltage: Quantity # volts
+    stallTorque: Quantity # newton_meters
+    stallCurrent: Quantity # amperes
+    freeCurrent: Quantity # amperes
+    freeSpeed: Quantity # radians_per_second
+    numMotors: int = 1
+    
+    driveMotor:DCMotor
+    moduleConfig:ModuleConfig
+"""
+    config:RobotConfig
 
 def greatest_distance_from_translations(translations: Iterable[Translation2d]):
     """

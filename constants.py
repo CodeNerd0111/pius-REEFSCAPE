@@ -1,6 +1,9 @@
 import math
 from swervepy import u
 import swervepy.impl
+from wpimath.geometry import Translation2d
+from pint import Quantity
+from wpimath import units
 
 class DriveConstants:
     drive_params = swervepy.impl.TypicalDriveComponentParameters(
@@ -52,8 +55,31 @@ class DriveConstants:
     trackWidth = 1.8
 
     maxVelocity = 5 * (u.m / u.s)
-    maxAcceleration = 1 * (u.m / u.s / u.s)
+    maxAcceleration = 9 * (u.m / u.s / u.s)
     maxAngularVelocity = 3 * (u.rad / u.s)
+    maxAngularAcceleration = 7 * (u.rad / u.s / u.s)
+
+class RobotConfigControls:
+    massKG: float = 70
+    MOI: float = 6
+    moduleOffsets = [
+        Translation2d(DriveConstants.wheelBase / 2, DriveConstants.trackWidth / 2),
+        Translation2d(DriveConstants.wheelBase / 2, -DriveConstants.trackWidth / 2),
+        Translation2d(-DriveConstants.wheelBase / 2, DriveConstants.trackWidth / 2),
+        Translation2d(-DriveConstants.wheelBase / 2, -DriveConstants.trackWidth / 2)
+    ]
+    wheelRadiusMeters: float = 0.05
+    maxDriveVelocityMPS: float = 5
+    wheelCOF: float = 1.5
+    driveCurrentLimit: float = 2
+    numMotors: int = 1
+
+    nominalVoltage: units.volts = 12
+    stallTorque: units.newton_meters = 3.75
+    stallCurrent: units.amperes = 150
+    freeCurrent: units.amperes = 1.8
+    freeSpeed: units.radians_per_second = 594.3893
+    numMotors: int = 1
 
 class OIConstants:
     kXBoxControllerPort = 2

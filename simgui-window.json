@@ -27,31 +27,31 @@
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "183,40",
-      "Size": "167,206"
+      "Size": "171,194"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "154,252",
+      "Pos": "194,226",
       "Size": "1041,552"
     },
     "###FMS": {
       "Collapsed": "0",
-      "Pos": "6,675",
+      "Pos": "12,860",
       "Size": "168,214"
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "232,925",
+      "Pos": "578,869",
       "Size": "976,179"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "208,10",
-      "Size": "937,654"
+      "Pos": "1037,83",
+      "Size": "1332,664"
     },
     "###NetworkTables Info": {
       "Collapsed": "0",
-      "Pos": "292,91",
+      "Pos": "1248,357",
       "Size": "937,181"
     },
     "###Other Devices": {
@@ -61,12 +61,12 @@
     },
     "###RoboRIO": {
       "Collapsed": "0",
-      "Pos": "5,125",
-      "Size": "141,164"
+      "Pos": "381,31",
+      "Size": "133,164"
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "6,437",
+      "Pos": "2,361",
       "Size": "186,254"
     },
     "###Timing": {
