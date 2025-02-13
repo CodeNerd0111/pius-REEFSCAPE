@@ -14,6 +14,7 @@ from pathplannerlib.path import PathPlannerPath
 
 
 
+
 # TODO: Subsystems list
 # 1. Swerve module
 # 2. Elevator Module
@@ -41,9 +42,8 @@ class RobotContainer:
 
         # Set up Autonomous Controls
         self.autoChooser = wpilib.SendableChooser()
-        self.autoChooser.addOption("Just go forward", 1)
-        self.autoChooser.addOption("Just go backward", 2)
-        self.autoChooser.addOption("None", 0)
+        self.autoChooser.addOption("Go to Cage Chor Cmd", 1)
+
 
         # The driver's controllers
         self.XBoxController = commands2.button.CommandXboxController(
@@ -74,10 +74,14 @@ class RobotContainer:
                     True, True
                 ),
                 self.robotDrive
-            ).beforeStarting(self.robotDrive.follow_trajectory_command(
-                    PathPlannerPath.fromChoreoTrajectory("goToCage"), 
+            ).beforeStarting(
+                self.robotDrive.follow_trajectory_command(
+                    PathPlannerPath.fromChoreoTrajectory("goToCage"),
                     self.robotDrive.TrajectoryFollowerParameters,
-                    self.robotDrive.RobotConfigControls.config))
+                    self.robotDrive.RobotConfigControls.config,
+                    True,  # isFirstPath Flag
+                    True   # Open Drive_Open_loop Flag
+                    ))
         )
         
 
@@ -116,12 +120,12 @@ class RobotContainer:
 
             case 1:
                 return self.robotDrive.follow_trajectory_command(
-                    PathPlannerPath.fromChoreoTrajectory("goToCage.chor"), 
-                    self.robotDrive.TrajectoryFollowerParameters)
-            case 2:
-                return commands2.cmd.none()
-            case _:
-                return commands2.cmd.none()
+                    PathPlannerPath.fromChoreoTrajectory("goToCage"), 
+                    self.robotDrive.TrajectoryFollowerParameters,
+                    self.robotDrive.RobotConfigControls.config,
+                    True,
+                    True
+                    )
 
 
 
