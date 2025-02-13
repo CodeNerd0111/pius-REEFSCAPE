@@ -6,9 +6,9 @@
     "GLOBAL": {
       "font": "Droid Sans",
       "fps": "120",
-      "height": "1111",
+      "height": "1001",
       "maximized": "1",
-      "style": "1",
+      "style": "3",
       "userScale": "2",
       "width": "1920",
       "xpos": "0",
@@ -27,31 +27,31 @@
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "183,40",
-      "Size": "171,194"
+      "Size": "169,206"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "194,226",
+      "Pos": "190,193",
       "Size": "1041,552"
     },
     "###FMS": {
       "Collapsed": "0",
-      "Pos": "12,860",
-      "Size": "168,214"
+      "Pos": "1,745",
+      "Size": "166,228"
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "578,869",
-      "Size": "976,179"
+      "Pos": "458,800",
+      "Size": "976,193"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "1037,83",
+      "Pos": "593,61",
       "Size": "1332,664"
     },
     "###NetworkTables Info": {
       "Collapsed": "0",
-      "Pos": "1248,357",
+      "Pos": "912,781",
       "Size": "937,181"
     },
     "###Other Devices": {
@@ -62,17 +62,17 @@
     "###RoboRIO": {
       "Collapsed": "0",
       "Pos": "381,31",
-      "Size": "133,164"
+      "Size": "137,160"
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "2,361",
-      "Size": "186,254"
+      "Pos": "3,383",
+      "Size": "186,272"
     },
     "###Timing": {
       "Collapsed": "0",
       "Pos": "6,187",
-      "Size": "160,142"
+      "Size": "162,192"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -82,7 +82,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "5,20",
-      "Size": "105,134"
+      "Size": "111,140"
     }
   }
 }
