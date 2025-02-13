@@ -77,10 +77,10 @@ class RobotContainer:
             ).beforeStarting(
                 self.robotDrive.follow_trajectory_command(
                     PathPlannerPath.fromChoreoTrajectory("goToCage"),
-                    self.robotDrive.TrajectoryFollowerParameters,  # Fixed typo
+                    self.robotDrive.TrajectoryFollowerParameters,
                     self.robotDrive.RobotConfigControls.config,
-                    True,  # isFirstPath flag
-                    True
+                    True,  # isFirstPath Flag
+                    True   # Open Drive_Open_loop Flag
                     ))
         )
         
