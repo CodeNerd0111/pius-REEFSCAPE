@@ -2,7 +2,6 @@ import math
 from swervepy import u
 import swervepy.impl
 from wpimath.geometry import Translation2d
-from pint import Quantity
 from wpimath import units
 
 class DriveConstants:
