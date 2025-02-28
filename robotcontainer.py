@@ -74,14 +74,7 @@ class RobotContainer:
                     True, True
                 ),
                 self.robotDrive
-            ).beforeStarting(
-                self.robotDrive.follow_trajectory_command(
-                    PathPlannerPath.fromChoreoTrajectory("goToCage"),
-                    self.robotDrive.TrajectoryFollowerParameters,
-                    self.robotDrive.RobotConfigControls.config,
-                    True,  # isFirstPath Flag
-                    True   # Open Drive_Open_loop Flag
-                    ))
+            )
         )
         
 
@@ -116,16 +109,13 @@ class RobotContainer:
 
         :returns: the command to run in autonomous
         """
-        match self.autoChooser.getSelected():
-
-            case 1:
-                return self.robotDrive.follow_trajectory_command(
-                    PathPlannerPath.fromChoreoTrajectory("goToCage"), 
-                    self.robotDrive.TrajectoryFollowerParameters,
-                    self.robotDrive.RobotConfigControls.config,
-                    True,
-                    True
-                    )
+        return self.robotDrive.follow_trajectory_command(
+            PathPlannerPath.fromChoreoTrajectory("goToCage"), 
+            self.robotDrive.TrajectoryFollowerParameters,
+            self.robotDrive.RobotConfigControls.config,
+            True,
+            True 
+            )
 
 
 
