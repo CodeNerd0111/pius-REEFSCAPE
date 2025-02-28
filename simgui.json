@@ -1,11 +1,6 @@
 {
   "HALProvider": {
     "Other Devices": {
-      "SPARK MAX [7]": {
-        "header": {
-          "open": true
-        }
-      },
       "window": {
         "visible": false
       }
@@ -19,7 +14,8 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Field": "Field2d"
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Gyro": "Gyro"
     },
     "windows": {
       "/SmartDashboard/Field": {
@@ -53,6 +49,11 @@
         },
         "Pose2d[]##v_/PathPlanner/activePath": {
           "open": true
+        }
+      },
+      "SmartDashboard": {
+        "Gyro": {
+          "open": true
         },
         "open": true
       }
@@ -63,8 +64,5 @@
       "open": true
     },
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }

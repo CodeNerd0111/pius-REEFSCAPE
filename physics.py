@@ -71,17 +71,18 @@ class PhysicsEngine:
         """
 
         # Simulate the drivetrain
-        
+        # Front Left, Back Left, Front Right, Back Right - Original Order
+        # Back Left, Back Right, Front Left, Front Right - Calculation Order
 
         motorPositions = tuple(motor.getDouble("Position").get() for motor in self.motors)
         motorSpeeds = tuple(motor.getDouble("Velocity").get() for motor in self.motors)
-        chassisSpeeds = four_motor_swerve_drivetrain(motorSpeeds[0],
-                                                     motorSpeeds[2],
-                                                     motorSpeeds[1],
+        chassisSpeeds = four_motor_swerve_drivetrain(motorSpeeds[1],
                                                      motorSpeeds[3],
-                                                     motorPositions[4],
-                                                     motorPositions[6],
+                                                     motorSpeeds[0],
+                                                     motorSpeeds[2],
                                                      motorPositions[5],
-                                                     motorPositions[7]
+                                                     motorPositions[7],
+                                                     motorPositions[4],
+                                                     motorPositions[6]
                                                      )
         pose = self.physics_controller.drive(chassisSpeeds, tm_diff)

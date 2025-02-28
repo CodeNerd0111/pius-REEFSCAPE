@@ -293,7 +293,7 @@ class NEOCoaxialDriveComponent(CoaxialDriveComponent):
         percent_out = velocity / self._params.max_speed
         self._motor.set(percent_out)
 
-        self._sim_velocity.set(velocity)
+        self._sim_velocity.set(percent_out)
 
     def follow_velocity_closed(self, velocity: float):
         self._controller.setReference(

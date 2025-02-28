@@ -41,6 +41,7 @@ from .sensor import (
     Pigeon2Gyro,
     SparkMaxEncoderType,
     SparkMaxAbsoluteEncoder,
+    NAVXGyro,
     DummyGyro,
 )
 from .system import CoaxialSwerveModule

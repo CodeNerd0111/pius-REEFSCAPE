@@ -90,7 +90,7 @@ class SwerveDrive(commands2.Subsystem):
 
         for i, module in enumerate(modules):
             wpilib.SmartDashboard.putData(f"Module {i}", module)
-
+        wpilib.SmartDashboard.putData("Gyro", gyro)
         # Field to plot auto trajectories and robot pose
         self.field = wpilib.Field2d()
         wpilib.SmartDashboard.putData(self.field)

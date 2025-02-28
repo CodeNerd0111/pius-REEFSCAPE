@@ -6,7 +6,7 @@
     "GLOBAL": {
       "font": "Droid Sans",
       "fps": "120",
-      "height": "1001",
+      "height": "1111",
       "maximized": "1",
       "style": "3",
       "userScale": "2",
@@ -31,8 +31,8 @@
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "190,193",
-      "Size": "1041,552"
+      "Pos": "181,527",
+      "Size": "1041,553"
     },
     "###FMS": {
       "Collapsed": "0",
@@ -72,7 +72,7 @@
     "###Timing": {
       "Collapsed": "0",
       "Pos": "6,187",
-      "Size": "162,192"
+      "Size": "162,166"
     },
     "Debug##Default": {
       "Collapsed": "0",

@@ -65,15 +65,12 @@ class RobotContainer:
         self.robotDrive.setDefaultCommand(
             # A split-stick arcade command, with forward/backward controlled by the left
             # hand, and turning controlled by the right.
-            commands2.cmd.run(
-                lambda: self.robotDrive.drive(
-                    geometry.Translation2d(
-                        -self.leftJoystick.getX(),
-                        -self.leftJoystick.getY()),
-                    self.rightJoystick.getY(),
-                    True, True
-                ),
-                self.robotDrive
+            self.robotDrive.teleop_command(
+                translation=lambda: -self.leftJoystick.getX(),
+                strafe=lambda: -self.leftJoystick.getY(),
+                rotation=lambda: self.rightJoystick.getY(),
+                field_relative=True, 
+                drive_open_loop=True
             )
         )
         

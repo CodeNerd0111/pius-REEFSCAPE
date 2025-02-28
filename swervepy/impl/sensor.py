@@ -2,11 +2,56 @@ import enum
 import math
 
 import phoenix5.sensors
+import navx
 import rev
 import wpilib
-from wpimath.geometry import Rotation2d
+from wpimath.geometry import Rotation2d, Pose2d
 
 from ..abstract.sensor import AbsoluteEncoder, Gyro
+
+
+class NAVXGyro(Gyro):
+    def __init__(self):
+        super().__init__()
+        self._gyro = navx.AHRS(navx.AHRS.NavXComType.kUSB1)
+        self._radians = 0
+
+    def zero_heading(self):
+        self._radians = 0
+        self._gyro.zeroYaw()
+    
+    def zero_position(self):
+        self._gyro.resetDisplacement()
+
+    def simulation_periodic(self, delta_position: float):
+        self._radians += delta_position
+
+    @property
+    def sim_heading(self) -> Rotation2d:
+        return Rotation2d(self._radians)
+
+    @property
+    def heading(self) -> Rotation2d:
+        return self._gyro.getRotation2d()
+    
+    @property
+    def field_position(self) -> Pose2d:
+        x = self._gyro.getDisplacementX()
+        y = self._gyro.getDisplacementY()
+        return Pose2d(x, y, self.heading)
+    
+    def initSendable(self, builder):
+        builder.setSmartDashboardType("Gyro")
+        builder.addDoubleProperty("Value", lambda: self.heading.degrees(), lambda _: None)
+        builder.addDoubleProperty("Heading (rad)", lambda: self.heading.radians(), lambda _: None)
+        builder.addDoubleProperty("Sim_Heading (rad)", lambda: self.sim_heading.radians(), lambda _: None)
+
+
+
+
+
+
+
 
 
 class AbsoluteCANCoder(AbsoluteEncoder):
