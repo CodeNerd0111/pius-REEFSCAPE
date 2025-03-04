@@ -108,3 +108,8 @@ class ElevatorConstants:
     fS_motorPort = 1
     sS_motorPort = 2
     tS_motorPort = 3
+
+    kS: units.volts =  0
+    kG: units.volts = 0
+    kV: units.volt_seconds_per_meter = 0
+    kA: units.volt_seconds_squared_per_meter = 0
