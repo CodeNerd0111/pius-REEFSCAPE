@@ -18,9 +18,11 @@ from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units
 from pyfrc.physics.drivetrains import four_motor_swerve_drivetrain
 from wpilib import simulation
-
+from constants import ElevatorConstants as const
+import wpilib
 import typing
-
+import wpilib.simulation
+import wpimath.system.plant
 if typing.TYPE_CHECKING:
     from robot import MyRobot
 
@@ -58,7 +60,33 @@ class PhysicsEngine:
             32 * units.inch + bumper_width * 2, # robot length
             6 * units.inch,                     # wheel diameter
         )
-        
+                # This gearbox represents a gearbox containing 4 Vex 775pro motors.
+        self.elevatorGearbox = wpimath.system.plant.DCMotor.vex775Pro(4)
+
+        # Simulation classes help us simulate what's going on, including gravity.
+        self.elevatorSim = wpilib.simulation.ElevatorSim(
+            self.elevatorGearbox,
+            const.kElevatorGearing,
+            const.kCarriageMass,
+            const.kElevatorDrumRadius,
+            const.kMinElevatorHeight,
+            const.kMaxElevatorHeight,
+            True,
+            0,
+            [0.01, 0.0],
+        )
+        self.encoderSim = wpilib.simulation.EncoderSim(wpilib.Encoder(1, 0))
+        self.motorSim = wpilib.simulation.PWMSim(wpilib.PWMSparkMax(0))
+
+        # Create a Mechanism2d display of an elevator
+        self.mech2d = wpilib.Mechanism2d(20, 50)
+        self.elevatorRoot = self.mech2d.getRoot("Elevator Root", 10, 0)
+        self.elevatorMech2d = self.elevatorRoot.appendLigament(
+            "Elevator", self.elevatorSim.getPositionInches(), 90
+        )
+
+        # Put Mechanism to SmartDashboard
+        wpilib.SmartDashboard.putData("Elevator Sim", self.mech2d)
 
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
@@ -86,3 +114,31 @@ class PhysicsEngine:
                                                      motorPositions[6]
                                                      )
         pose = self.physics_controller.drive(chassisSpeeds, tm_diff)
+
+        """
+        Called when the simulation parameters for the program need to be
+        updated.
+
+        :param now: The current time as a float
+        :param tm_diff: The amount of time that has passed since the last
+                        time that this function was called
+        """
+
+        # First, we set our "inputs" (voltages)
+        self.elevatorSim.setInput(
+            0, self.motorSim.getSpeed() * wpilib.RobotController.getInputVoltage()
+        )
+
+        # Next, we update it
+        self.elevatorSim.update(tm_diff)
+
+        # Finally, we set our simulated encoder's readings and simulated battery
+        # voltage
+        self.encoderSim.setDistance(self.elevatorSim.getPosition())
+        # SimBattery estimates loaded battery voltage
+        # wpilib.simulation.RoboRioSim.setVInVoltage(
+        #     wpilib.simulation.BatterySim
+        # )
+
+        # Update the Elevator length based on the simulated elevator height
+        self.elevatorMech2d.setLength(self.elevatorSim.getPositionInches())

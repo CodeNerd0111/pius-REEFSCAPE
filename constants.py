@@ -92,3 +92,19 @@ class CameraConstants:
     kAprilTagSize = 0.1524
     kVerticalFocalLength = 700
     kHorizontalFocalLength = 700
+
+class ElevatorConstants:
+    # Place Holder numbers
+    kElevatorKp = 5.0
+    kElevatorGearing = 10.0
+    kElevatorDrumRadius = 0.0508  
+    kCarriageMass = 4
+
+    kMinElevatorHeight = 0.0508  
+    kMaxElevatorHeight = 1.27  
+    kVel = 1.75
+    kAcc = .75
+
+    fS_motorPort = 1
+    sS_motorPort = 2
+    tS_motorPort = 3
