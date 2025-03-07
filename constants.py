@@ -37,18 +37,18 @@ class DriveConstants:
         invert_motor=False,
     )
 
-    fL_MotorPort = 0
-    bL_MotorPort = 2
-    fR_MotorPort = 4
-    bR_MotorPort = 6
-    fL_AzimuthPort = 1
-    bL_AzimuthPort = 3
-    fR_AzimuthPort = 5
-    bR_AzimuthPort = 7
-    fL_EncoderPort = 8
-    bL_EncoderPort = 9
-    fR_EncoderPort = 10
-    bR_EncoderPort = 11
+    fL_MotorPort = 9
+    bL_MotorPort = 10
+    fR_MotorPort = 7
+    bR_MotorPort = 5
+    fL_AzimuthPort = 3
+    bL_AzimuthPort = 4
+    fR_AzimuthPort = 6
+    bR_AzimuthPort = 2
+    fL_EncoderPort = 13
+    bL_EncoderPort = 11
+    fR_EncoderPort = 14
+    bR_EncoderPort = 12
 
     wheelBase = 0.05
     trackWidth = 1.8
