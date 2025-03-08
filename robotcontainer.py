@@ -66,11 +66,11 @@ class RobotContainer:
             # A split-stick arcade command, with forward/backward controlled by the left
             # hand, and turning controlled by the right.
             self.robotDrive.teleop_command(
-                translation=lambda: -self.leftJoystick.getX(),
-                strafe=lambda: -self.leftJoystick.getY(),
-                rotation=lambda: self.rightJoystick.getY(),
+                translation= lambda: self.setDeadZonesTranslation(),
+                strafe= lambda: self.setDeadZonesStrafe(),
+                rotation= lambda: self.setDeadZonesRotation(),
                 field_relative=True, 
-                drive_open_loop=True
+                drive_open_loop=False
             )
         )
         
@@ -113,7 +113,22 @@ class RobotContainer:
             True,
             True 
             )
-
+    
+    def setDeadZonesTranslation(self):
+        if abs(-self.leftJoystick.getX()) > constants.OIConstants.kDeadZone:
+            return -self.leftJoystick.getX()
+        else:
+            return 0 
+    def setDeadZonesStrafe(self):
+        if abs(-self.leftJoystick.getY()) > constants.OIConstants.kDeadZone:
+            return -self.leftJoystick.getY()
+        else:
+            return 0 
+    def setDeadZonesRotation(self):
+        if abs(self.rightJoystick.getY()) > constants.OIConstants.kDeadZone:
+            return self.rightJoystick.getY()
+        else:
+            return 0 
 
 
         

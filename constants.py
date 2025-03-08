@@ -15,9 +15,9 @@ class DriveConstants:
         peak_current_limit=60,
         peak_current_duration=0.01,
         neutral_mode=swervepy.impl.NeutralMode.COAST,
-        kP=0,
-        kI=0,
-        kD=0,
+        kP=0.8,
+        kI=0.3,
+        kD=0.4,
         kS=0,
         kV=0,
         kA=0,
@@ -32,31 +32,31 @@ class DriveConstants:
         peak_current_duration=0.01,
         neutral_mode=swervepy.impl.NeutralMode.BRAKE,
         kP=0.3,
-        kI=0,
-        kD=0,
+        kI=0.1,
+        kD=0.2,
         invert_motor=False,
     )
 
-    fL_MotorPort = 0
-    bL_MotorPort = 2
-    fR_MotorPort = 4
-    bR_MotorPort = 6
-    fL_AzimuthPort = 1
-    bL_AzimuthPort = 3
-    fR_AzimuthPort = 5
-    bR_AzimuthPort = 7
-    fL_EncoderPort = 8
-    bL_EncoderPort = 9
-    fR_EncoderPort = 10
-    bR_EncoderPort = 11
+    fL_MotorPort = 9
+    bL_MotorPort = 10
+    fR_MotorPort = 7
+    bR_MotorPort = 5
+    fL_AzimuthPort = 3
+    bL_AzimuthPort = 4
+    fR_AzimuthPort = 6
+    bR_AzimuthPort = 2
+    fL_EncoderPort = 13
+    bL_EncoderPort = 11
+    fR_EncoderPort = 14
+    bR_EncoderPort = 12
 
     wheelBase = 0.05
     trackWidth = 1.8
 
     maxVelocity = 5 * (u.m / u.s)
-    maxAcceleration = 9 * (u.m / u.s / u.s)
+    maxAcceleration = 6 * (u.m / u.s / u.s)
     maxAngularVelocity = 3 * (u.rad / u.s)
-    maxAngularAcceleration = 7 * (u.rad / u.s / u.s)
+    maxAngularAcceleration = 5 * (u.rad / u.s / u.s)
 
 class RobotConfigControls:
     massKG: float = 70
@@ -84,6 +84,7 @@ class OIConstants:
     kXBoxControllerPort = 2
     kLeftJoystickPort = 0
     kRightJoystickPort = 1
+    kDeadZone = 0.1
 
 class CameraConstants:
     kImageWidth = 640
