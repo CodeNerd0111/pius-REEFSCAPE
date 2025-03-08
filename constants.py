@@ -8,16 +8,16 @@ class DriveConstants:
     drive_params = swervepy.impl.TypicalDriveComponentParameters(
         wheel_circumference=4 * math.pi * u.inch,
         gear_ratio=6.75 / 1,  # SDS Mk4i L2
-        max_speed=4.5 * (u.m / u.s),
+        max_speed=3.5 * (u.m / u.s),
         open_loop_ramp_rate=0,
         closed_loop_ramp_rate=0,
         continuous_current_limit=40,
         peak_current_limit=60,
         peak_current_duration=0.01,
         neutral_mode=swervepy.impl.NeutralMode.COAST,
-        kP=0.8,
-        kI=0.3,
-        kD=0.4,
+        kP=0.001,
+        kI=0.0005,
+        kD=0.0007,
         kS=0,
         kV=0,
         kA=0,
@@ -25,15 +25,15 @@ class DriveConstants:
     )
     azimuth_params = swervepy.impl.TypicalAzimuthComponentParameters(
         gear_ratio=150 / 7,  # SDS Mk4i
-        max_angular_velocity=11.5 * (u.rad / u.s),
+        max_angular_velocity=5.5 * (u.rad / u.s),
         ramp_rate=0,
         continuous_current_limit=40,
         peak_current_limit=60,
         peak_current_duration=0.01,
         neutral_mode=swervepy.impl.NeutralMode.BRAKE,
-        kP=0.3,
-        kI=0.1,
-        kD=0.2,
+        kP=0.01,
+        kI=0,
+        kD=0,
         invert_motor=False,
     )
 
@@ -54,7 +54,7 @@ class DriveConstants:
     trackWidth = 1.8
 
     maxVelocity = 5 * (u.m / u.s)
-    maxAcceleration = 6 * (u.m / u.s / u.s)
+    maxAcceleration = 3 * (u.m / u.s / u.s)
     maxAngularVelocity = 3 * (u.rad / u.s)
     maxAngularAcceleration = 5 * (u.rad / u.s / u.s)
 
@@ -109,8 +109,3 @@ class ElevatorConstants:
     fS_motorPort = 1
     sS_motorPort = 2
     tS_motorPort = 3
-
-    kS: units.volts =  0
-    kG: units.volts = 0
-    kV: units.volt_seconds_per_meter = 0
-    kA: units.volt_seconds_squared_per_meter = 0

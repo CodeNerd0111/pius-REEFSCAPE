@@ -6,6 +6,7 @@ from wpimath.geometry import Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 from pint import Quantity
 from pathplannerlib.config import RobotConfig, PIDConstants, ModuleConfig
+from wpimath.kinematics import SwerveModuleState
 
 class DriveSubsystem(swervepy.subsystem.SwerveDrive):
 
@@ -26,12 +27,15 @@ class DriveSubsystem(swervepy.subsystem.SwerveDrive):
         enc_backRight = swervepy.impl.AbsoluteCANCoder(dc.bR_EncoderPort)
 
         # Azimuth module offset. This is the value reported by the absolute encoder when the wheel is pointed straight.
-        offset = Rotation2d.fromDegrees(0)
+        offset_fL = Rotation2d.fromDegrees(-44.473)
+        offset_bL = Rotation2d.fromDegrees(31.533)
+        offset_fR = Rotation2d.fromDegrees(0)
+        offset_bR = Rotation2d.fromDegrees(0)
         # Azimuth Components
-        a_frontLeft = swervepy.impl.NEOCoaxialAzimuthComponent(dc.fL_AzimuthPort, offset, dc.azimuth_params, enc_frontLeft)
-        a_backLeft = swervepy.impl.NEOCoaxialAzimuthComponent(dc.bL_AzimuthPort, offset, dc.azimuth_params, enc_backLeft)
-        a_frontRight = swervepy.impl.NEOCoaxialAzimuthComponent(dc.fR_AzimuthPort, offset, dc.azimuth_params, enc_frontRight)
-        a_backRight = swervepy.impl.NEOCoaxialAzimuthComponent(dc.bR_AzimuthPort, offset, dc.azimuth_params, enc_backRight)
+        a_frontLeft = swervepy.impl.NEOCoaxialAzimuthComponent(dc.fL_AzimuthPort, offset_fL, dc.azimuth_params, enc_frontLeft)
+        a_backLeft = swervepy.impl.NEOCoaxialAzimuthComponent(dc.bL_AzimuthPort, offset_bL, dc.azimuth_params, enc_backLeft)
+        a_frontRight = swervepy.impl.NEOCoaxialAzimuthComponent(dc.fR_AzimuthPort, offset_fR, dc.azimuth_params, enc_frontRight)
+        a_backRight = swervepy.impl.NEOCoaxialAzimuthComponent(dc.bR_AzimuthPort, offset_bR, dc.azimuth_params, enc_backRight)
 
         # Swerve Modules
         frontLeft = swervepy.impl.CoaxialSwerveModule(
@@ -44,6 +48,8 @@ class DriveSubsystem(swervepy.subsystem.SwerveDrive):
             m_backRight, a_backRight, Translation2d(-dc.wheelBase / 2, -dc.trackWidth / 2))
         
         gyro = swervepy.impl.NAVXGyro()
+
+        
 
         super().__init__(
             [frontLeft, backLeft, frontRight, backRight],

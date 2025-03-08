@@ -13,7 +13,7 @@ from ..abstract.sensor import AbsoluteEncoder, Gyro
 class NAVXGyro(Gyro):
     def __init__(self):
         super().__init__()
-        self._gyro = navx.AHRS(navx.AHRS.NavXComType.kUSB1)
+        self._gyro = navx.AHRS(navx.AHRS.NavXComType.kMXP_SPI)
         self._radians = 0
 
     def zero_heading(self):

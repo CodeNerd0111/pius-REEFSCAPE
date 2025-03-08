@@ -116,17 +116,17 @@ class RobotContainer:
     
     def setDeadZonesTranslation(self):
         if abs(-self.leftJoystick.getX()) > constants.OIConstants.kDeadZone:
-            return -self.leftJoystick.getX()
+            return (-self.leftJoystick.getX())**3
         else:
             return 0 
     def setDeadZonesStrafe(self):
         if abs(-self.leftJoystick.getY()) > constants.OIConstants.kDeadZone:
-            return -self.leftJoystick.getY()
+            return (-self.leftJoystick.getY())**3
         else:
             return 0 
     def setDeadZonesRotation(self):
-        if abs(self.rightJoystick.getY()) > constants.OIConstants.kDeadZone:
-            return self.rightJoystick.getY()
+        if abs(self.leftJoystick.getZ()) > constants.OIConstants.kDeadZone:
+            return (self.leftJoystick.getZ())**3
         else:
             return 0 
 
