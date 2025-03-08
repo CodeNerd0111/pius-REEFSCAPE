@@ -57,7 +57,7 @@ class AprilTagUnpacker:
         self.tagTable.getFloatArrayTopic("Pitch").getEntry(),
         self.tagTable.getFloatArrayTopic("Yaw").getEntry()
         for index in range(len(cX)):
-            tag = _AprilTag(cX, cY, tX, tY, tZ, roll, pitch, yaw)
+            tag = _AprilTag(cX[index], cY[index], tX[index], tY[index], tZ[index], roll[index], pitch[index], yaw[index])
             tagList.append(tag)
 
         return tagList
